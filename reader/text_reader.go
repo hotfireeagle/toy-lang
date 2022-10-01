@@ -1,52 +1,55 @@
 package reader
 
-import "acorn/constant"
+import (
+	"acorn/constant"
+)
 
 type TextReader struct {
-	inputSourceCodes    []rune
-	rowNumber           int
-	currentRunePosition int
-	nextRunePosition    int
+	inputSourceCodes []rune
+	rowNumber        int
+	runePosition     int
+	currentRune      rune
 }
 
 func NewTextReader(input string) *TextReader {
 	return &TextReader{
-		inputSourceCodes:    []rune(input),
-		rowNumber:           1,
-		currentRunePosition: 0,
-		nextRunePosition:    1,
+		inputSourceCodes: []rune(input),
+		rowNumber:        1,
+		runePosition:     -1,
+		currentRune:      constant.EOF,
 	}
 }
 
-// 返回当前position所在位置的token字符
-// 同时两个位置向前加1
 func (tr *TextReader) NextRune() rune {
-	if tr.nextRunePosition >= len(tr.inputSourceCodes) {
+	nextRunePosition := tr.runePosition + 1
+	if nextRunePosition >= len(tr.inputSourceCodes) {
 		return constant.EOF
 	}
-	currentRune := tr.inputSourceCodes[tr.currentRunePosition]
 
-	tr.currentRunePosition = tr.nextRunePosition
-	tr.nextRunePosition += 1
+	nextRune := tr.inputSourceCodes[nextRunePosition]
+	tr.runePosition = nextRunePosition
+	tr.currentRune = nextRune
 
-	return currentRune
+	return nextRune
 }
 
-// 获取当前位置的字符
-func (tr *TextReader) PeekCurrentRune() rune {
-	if tr.currentRunePosition >= len(tr.inputSourceCodes) {
-		return constant.EOF
+func (tr *TextReader) PeekCurrentRune() (rune, error) {
+	if tr.runePosition == -1 {
+		return constant.EOF, constant.ErrNextRune
 	}
-
-	return tr.inputSourceCodes[tr.currentRunePosition]
+	return tr.currentRune, nil
 }
 
 // 获取下几个位置的字符
-func (tr *TextReader) PeekNextNRune(n int) rune {
-	nPostion := tr.currentRunePosition + n
-	if nPostion >= len(tr.inputSourceCodes) {
-		return constant.EOF
+func (tr *TextReader) PeekNextNRune(n int) (rune, error) {
+	if tr.runePosition == -1 {
+		return constant.EOF, constant.ErrNextRune
 	}
 
-	return tr.inputSourceCodes[nPostion]
+	nPostion := tr.runePosition + n
+	if nPostion >= len(tr.inputSourceCodes) {
+		return constant.EOF, nil
+	}
+
+	return tr.inputSourceCodes[nPostion], nil
 }

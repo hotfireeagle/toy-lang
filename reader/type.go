@@ -9,7 +9,7 @@ const (
 
 type InputReader interface {
 	NextRune() rune
-	PeekCurrentRune() rune
+	PeekCurrentRune() (rune, error)
 }
 
 func New(mode ReaderMode, filePathOrContent string) InputReader {
