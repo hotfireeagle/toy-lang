@@ -7,20 +7,21 @@ type TextReader struct {
 	rowNumber           int
 	currentRunePosition int
 	nextRunePosition    int
-	currentRune         rune
 }
 
 func NewTextReader(input string) *TextReader {
 	return &TextReader{
-		inputSourceCodes: []rune(input),
-		rowNumber:        1,
+		inputSourceCodes:    []rune(input),
+		rowNumber:           1,
+		currentRunePosition: 0,
+		nextRunePosition:    1,
 	}
 }
 
 // 返回当前position所在位置的token字符
 // 同时两个位置向前加1
-func (tr *TextReader) ReadRune() rune {
-	if tr.currentRunePosition >= len(tr.inputSourceCodes) {
+func (tr *TextReader) NextRune() rune {
+	if tr.nextRunePosition >= len(tr.inputSourceCodes) {
 		return constant.EOF
 	}
 	currentRune := tr.inputSourceCodes[tr.currentRunePosition]

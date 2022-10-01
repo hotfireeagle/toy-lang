@@ -8,7 +8,7 @@ const (
 )
 
 type InputReader interface {
-	ReadRune() rune
+	NextRune() rune
 	PeekCurrentRune() rune
 }
 

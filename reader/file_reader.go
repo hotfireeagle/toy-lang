@@ -12,7 +12,7 @@ type FileReader struct {
 	currentRune      rune
 }
 
-func (fr *FileReader) ReadRune() rune {
+func (fr *FileReader) NextRune() rune {
 	return 0
 }
 
