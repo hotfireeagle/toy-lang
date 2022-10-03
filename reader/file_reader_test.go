@@ -1,11 +1,17 @@
 package reader
 
-import "testing"
+import (
+	"io/ioutil"
+	"os"
+	"testing"
+)
 
 func TestNextRune(t *testing.T) {
-	filePath := "/Users/smallhai/Desktop/index.js"
+	tempFile, err := ioutil.TempFile(os.TempDir(), "testcase.*.js")
 
-	fileReader := NewFileReader(filePath)
+	if err != nil {
+		t.Fatal(err)
+	}
 
 	tests := []rune{
 		' ',
@@ -23,6 +29,15 @@ func TestNextRune(t *testing.T) {
 		'd',
 		'\n',
 	}
+
+	_, err = tempFile.WriteString(string(tests))
+	defer os.Remove(tempFile.Name())
+
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	fileReader := NewFileReader(tempFile.Name())
 
 	for i, r := range tests {
 		nr := fileReader.NextRune()
