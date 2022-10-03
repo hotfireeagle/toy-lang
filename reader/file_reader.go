@@ -1,25 +1,81 @@
 package reader
 
-import "os"
+import (
+	"acorn/constant"
+	"bufio"
+	"errors"
+	"io"
+	"os"
+)
 
 type FileReader struct {
-	path             string
-	file             *os.File
-	rowNumber        int
-	columnNumber     int
-	currentPosition  int
-	nextReadPosition int
-	currentRune      rune
+	path      string
+	reader    *bufio.Reader
+	isEOF     bool
+	line      string
+	rowNumber int
+	tr        *TextReader
+}
+
+func NewFileReader(p string) *FileReader {
+	fileObj, openFileErr := os.Open(p)
+
+	if openFileErr != nil {
+		panic(openFileErr)
+	}
+
+	fileReader := bufio.NewReader(fileObj)
+
+	fr := &FileReader{
+		path:      p,
+		rowNumber: 0,
+		reader:    fileReader,
+	}
+
+	fr.readLine()
+
+	return fr
+}
+
+func (fr *FileReader) readLine() {
+	isEndOfFile := false
+
+	fr.rowNumber += 1
+
+	lineContent, err := fr.reader.ReadString('\n')
+
+	if err != nil {
+		if errors.Is(err, io.EOF) {
+			isEndOfFile = true
+		} else {
+			panic(err)
+		}
+	}
+
+	fr.line = lineContent
+	fr.isEOF = isEndOfFile
+	fr.tr = NewTextReader(lineContent)
 }
 
 func (fr *FileReader) NextRune() rune {
-	return 0
+	if fr.isEOF && fr.line == "" {
+		return constant.EOF
+	}
+
+	answer := fr.tr.NextRune()
+
+	if answer == constant.EOF {
+		fr.readLine()
+		return fr.NextRune()
+	} else {
+		return answer
+	}
 }
 
-func (fr *FileReader) PeekRune() rune {
-	return 0
+func (fr *FileReader) PeekCurrentRune() (rune, error) {
+	return fr.tr.PeekCurrentRune()
 }
 
-// func NewFileReader() *FileReader {
-// 	return 0
-// }
+func (fr *FileReader) PeekNextNRune(n int) (rune, error) {
+	return fr.tr.PeekNextNRune(n)
+}
