@@ -10,11 +10,12 @@ const (
 type InputReader interface {
 	NextRune() rune
 	PeekCurrentRune() (rune, error)
+	PeekNextNRune(n int) (rune, error)
 }
 
 func New(mode ReaderMode, filePathOrContent string) InputReader {
 	if mode == FileMode {
-		return nil
+		return NewFileReader(filePathOrContent)
 	} else if mode == TextMode {
 		return NewTextReader(filePathOrContent)
 	} else {

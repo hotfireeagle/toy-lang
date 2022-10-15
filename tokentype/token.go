@@ -10,3 +10,10 @@ type Token struct {
 func (t *Token) Print() {
 	fmt.Printf("[Type: %s Literal: %s]", tokenTypeLiteral[t.Type], t.Literal)
 }
+
+func New(t TokenType, s string) *Token {
+	return &Token{
+		t,
+		s,
+	}
+}

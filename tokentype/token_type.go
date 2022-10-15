@@ -7,7 +7,7 @@ const (
 	NUM
 	REGEXP
 	STRING
-	NAME
+	IDENTIFIER
 	EOF
 	BRACKETL       // [
 	BRACKETR       // ]
@@ -80,7 +80,7 @@ var tokenTypeLiteral map[TokenType]string = map[TokenType]string{
 	NUM:            "number",
 	REGEXP:         "regexp",
 	STRING:         "string",
-	NAME:           "name",
+	IDENTIFIER:     "name",
 	EOF:            "eof",
 	BRACKETL:       "[",
 	BRACKETR:       "]",
