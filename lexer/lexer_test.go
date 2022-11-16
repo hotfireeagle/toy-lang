@@ -2,7 +2,6 @@ package lexer
 
 import (
 	"acorn/reader"
-	"fmt"
 	"testing"
 )
 
@@ -12,8 +11,6 @@ func TestNextToken(t *testing.T) {
 	lexer := New(reader)
 
 	token := lexer.NextToken()
-
-	fmt.Println("token is >>>", token)
 
 	if token.Literal != "20" {
 		t.Fatal("error num")

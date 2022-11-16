@@ -2,14 +2,28 @@ package languagespec
 
 import "strings"
 
-const re_normal_num = "(\t| )*[1-9]+[0-9]*(\t| )*" // 平常的数字
-const re_num_0 = "(\t| )*0*(\t| )*"                // 数字0
-const re_num_binary2 = "(\t| )*0b[0-1]*(\t| )*"    // 二进制数字
+// TODO: 需要支持中文变量名，中文注释
+
+// 平常的数字
+const re_normal_num = "( )*[1-9]+[0-9]*( )*"
+
+// 数字0
+const re_num_0 = "( )*0*( )*"
+
+// 二进制数字
+const re_num_binary2 = "( )*0b[0-1]*( )*"
+
+// 16进制数字
+const re_num_16 = "( )*0x[0|1|2|3|4|5|6|7|8|9|a|b|c|d|e|f]*( )*"
+
+// 单行注释
+// const re_single_row_comment = "( )*//(( )*|([0-9])*|()*)\n( )*"
 
 var languageSpecs = []string{
 	re_normal_num,
 	re_num_0,
 	re_num_binary2,
+	re_num_16,
 }
 
 func combineSpecsRegularLanguage(specs []string) string {
