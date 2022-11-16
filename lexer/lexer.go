@@ -18,7 +18,7 @@ func New(r reader.InputReader) *Lexer {
 	}
 }
 
-func (l *Lexer) ConsumerWord(str strings.Builder) (string, bool) {
+func (l *Lexer) ConsumerWord(str *strings.Builder) (string, bool) {
 	rune := l.reader.NextRune()
 
 	str.WriteRune(rune)
@@ -56,8 +56,7 @@ func (l *Lexer) ConsumerWord(str strings.Builder) (string, bool) {
 
 func (l *Lexer) NextToken() *tokentype.Token {
 	var str strings.Builder
-
-	word, isUnvalid := l.ConsumerWord(str)
+	word, isUnvalid := l.ConsumerWord(&str)
 
 	if isUnvalid {
 		panic("不接受的语法")

@@ -4,6 +4,8 @@ import (
 	"strings"
 )
 
+// TODO: 支持非操作
+
 var epsilonSymbol = 'ε'
 
 // 操作符优先级

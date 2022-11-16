@@ -1,6 +1,8 @@
 package languagespec
 
-import "strings"
+import (
+	"strings"
+)
 
 // TODO: 需要支持中文变量名，中文注释
 
@@ -14,7 +16,7 @@ const re_num_0 = "( )*0*( )*"
 const re_num_binary2 = "( )*0b[0-1]*( )*"
 
 // 16进制数字
-const re_num_16 = "( )*0x[0|1|2|3|4|5|6|7|8|9|a|b|c|d|e|f]*( )*"
+const re_num_16 = "( )*0x(0|1|2|3|4|5|6|7|8|9|a|b|c|d|e|f)*( )*"
 
 // 单行注释
 // const re_single_row_comment = "( )*//(( )*|([0-9])*|()*)\n( )*"
