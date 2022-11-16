@@ -5,6 +5,8 @@ import (
 )
 
 // TODO: 支持非操作
+// TODO: 转dfa
+// TODO: 最小化dfa
 
 var epsilonSymbol = 'ε'
 
