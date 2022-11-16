@@ -1,7 +1,7 @@
 package lexer
 
 import (
-	"acorn/reader"
+	"jpg/reader"
 	"testing"
 )
 

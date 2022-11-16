@@ -1,7 +1,7 @@
 package reader
 
 import (
-	"acorn/constant"
+	"jpg/constant"
 	"testing"
 )
 

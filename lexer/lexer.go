@@ -1,10 +1,10 @@
 package lexer
 
 import (
-	"acorn/constant"
-	"acorn/languagespec"
-	"acorn/reader"
-	"acorn/tokentype"
+	"jpg/constant"
+	"jpg/languagespec"
+	"jpg/reader"
+	"jpg/tokentype"
 	"strings"
 )
 

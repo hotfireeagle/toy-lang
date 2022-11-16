@@ -1,10 +1,10 @@
 package reader
 
 import (
-	"acorn/constant"
 	"bufio"
 	"errors"
 	"io"
+	"jpg/constant"
 	"os"
 )
 
