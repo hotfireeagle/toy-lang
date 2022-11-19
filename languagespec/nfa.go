@@ -7,6 +7,9 @@ import (
 // TODO: 支持非操作
 // TODO: 转dfa
 // TODO: 最小化dfa
+// TODO: 支持中文
+// TODO: 支持非的操作
+// TODO: input symbol需要支持任意字符
 
 var epsilonSymbol = 'ε'
 
