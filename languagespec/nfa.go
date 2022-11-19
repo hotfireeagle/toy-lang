@@ -14,14 +14,14 @@ import (
 var epsilonSymbol = 'ε'
 
 // 操作符优先级
-var operatorPriority = map[rune]int{
-	'*': 4,
-	'?': 4,
-	'+': 4,
-	'.': 3,
-	'|': 2,
-	'(': 1,
-}
+// var operatorPriority = map[rune]int{
+// 	'*': 4,
+// 	'?': 4,
+// 	'+': 4,
+// 	'.': 3,
+// 	'|': 2,
+// 	'(': 1,
+// }
 
 func isNum(r rune) bool {
 	return r >= '0' && r <= '9'

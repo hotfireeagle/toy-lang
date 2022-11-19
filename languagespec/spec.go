@@ -42,16 +42,16 @@ const re_do = "( )*do( )*"
 var languageSpecs = []string{
 	re_normal_num,
 	re_num_0,
-	re_num_binary2,
-	re_num_16,
-	re_identfier,
-	re_var,
-	re_let,
-	re_const,
-	re_true,
-	re_false,
-	re_undefined,
-	re_null,
+	// re_num_binary2,
+	// re_num_16,
+	// re_identfier,
+	// re_var,
+	// re_let,
+	// re_const,
+	// re_true,
+	// re_false,
+	// re_undefined,
+	// re_null,
 }
 
 func combineSpecsRegularLanguage(specs []string) string {
