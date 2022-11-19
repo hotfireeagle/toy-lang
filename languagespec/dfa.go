@@ -74,7 +74,6 @@ type DFA struct {
 // }
 
 func preProcessForSugar(str string) []rune {
-	// var sb strings.Builder
 	notInputSymbolMap = make(map[rune]bool)
 	notInputSymbol2IgnoreAlphabet = make(map[rune]string)
 	needJumpIdxMap := make(map[int]bool)
@@ -133,16 +132,11 @@ func preProcessForSugar(str string) []rune {
 					answer = append(answer, '(')
 					answer = append(answer, convertResult...)
 					answer = append(answer, ')')
-					// sb.WriteRune('(')
-					// sb.WriteString(convertResult)
-					// sb.WriteRune(')')
 				} else {
 					answer = append(answer, literal)
-					// sb.WriteRune(literal)
 				}
 			} else {
 				answer = append(answer, literal)
-				// sb.WriteRune(literal)
 			}
 		} else if literal == '$' {
 			strLen := len(str)
@@ -173,12 +167,10 @@ func preProcessForSugar(str string) []rune {
 			}
 		} else {
 			answer = append(answer, literal)
-			// sb.WriteRune(literal)
 		}
 	}
 
 	return answer
-	// return sb.String()
 }
 
 func isAlphabet(a byte) bool {
