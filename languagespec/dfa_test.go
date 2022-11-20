@@ -36,3 +36,27 @@ func TestPreProcessForSugar(t *testing.T) {
 		}
 	}
 }
+
+func TestInfix2postfix(t *testing.T) {
+	testcases := []struct {
+		casev  []rune
+		answer []rune
+	}{
+		{preProcessForSugar("1|2"), []rune{'1', '2', unionOperator}},
+		{preProcessForSugar("1|2*"), []rune{'1', '2', starOperator, unionOperator}},
+		{preProcessForSugar("1*|2"), []rune{'1', starOperator, '2', unionOperator}},
+	}
+
+	for _, obj := range testcases {
+		result := infix2postfix(obj.casev)
+		if len(result) != len(obj.answer) {
+			t.Errorf("infix2postfix err %d, %d", len(result), len(obj.answer))
+			return
+		}
+		for i := 0; i < len(result); i++ {
+			if result[i] != obj.answer[i] {
+				t.Errorf("infix2postfix err in %v, %v", result[i], obj.answer[i])
+			}
+		}
+	}
+}

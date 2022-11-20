@@ -211,9 +211,9 @@ func re2postfix(re string) string {
 	return postfixResult.String()
 }
 
-type runeStack struct {
-	vals []rune
-}
+// type runeStack struct {
+// 	vals []rune
+// }
 
 func runeStackConstructor() *runeStack {
 	return &runeStack{
@@ -221,23 +221,23 @@ func runeStackConstructor() *runeStack {
 	}
 }
 
-func (s *runeStack) in(val rune) {
-	s.vals = append(s.vals, val)
-}
+// func (s *runeStack) in(val rune) {
+// 	s.vals = append(s.vals, val)
+// }
 
-func (s *runeStack) out() rune {
-	val := s.vals[len(s.vals)-1]
-	s.vals = s.vals[:len(s.vals)-1]
-	return val
-}
+// func (s *runeStack) out() rune {
+// 	val := s.vals[len(s.vals)-1]
+// 	s.vals = s.vals[:len(s.vals)-1]
+// 	return val
+// }
 
 func (s *runeStack) isEmpty() bool {
 	return len(s.vals) == 0
 }
 
-type stateStack struct {
-	vals []int
-}
+// type stateStack struct {
+// 	vals []int
+// }
 
 func stateStackConstructor() *stateStack {
 	return &stateStack{
@@ -245,15 +245,15 @@ func stateStackConstructor() *stateStack {
 	}
 }
 
-func (s *stateStack) in(v int) {
-	s.vals = append(s.vals, v)
-}
+// func (s *stateStack) in(v int) {
+// 	s.vals = append(s.vals, v)
+// }
 
-func (s *stateStack) out() int {
-	st := s.vals[len(s.vals)-1]
-	s.vals = s.vals[:len(s.vals)-1]
-	return st
-}
+// func (s *stateStack) out() int {
+// 	st := s.vals[len(s.vals)-1]
+// 	s.vals = s.vals[:len(s.vals)-1]
+// 	return st
+// }
 
 type NFA struct {
 	States              []int
@@ -377,7 +377,6 @@ func (n *NFA) Postfix2NFA(postfix string) {
 
 			stateStack.in(newBegin)
 		} else if character == '?' {
-			// zero or one time
 			state := stateStack.out()
 
 			newBegin := n.AddState()
@@ -392,7 +391,6 @@ func (n *NFA) Postfix2NFA(postfix string) {
 
 			stateStack.in(newBegin)
 		} else if character == '+' {
-			// one or more time
 			state := stateStack.out()
 
 			newBegin := n.AddState()

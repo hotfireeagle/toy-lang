@@ -67,8 +67,8 @@ func combineSpecsRegularLanguage(specs []string) string {
 	return result.String()
 }
 
-var spec = combineSpecsRegularLanguage(languageSpecs)
-var LanguageNFA = Re2nfaConstructor(spec)
+// var spec = combineSpecsRegularLanguage(languageSpecs)
+// var LanguageNFA = Re2nfaConstructor(spec)
 
 func CheckIsNormalNum(str string) bool {
 	normalNumNFA := Re2nfaConstructor(re_normal_num)
