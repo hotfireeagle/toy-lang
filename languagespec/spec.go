@@ -5,7 +5,7 @@ import (
 )
 
 // 平常的数字
-const re_normal_num = "( )*[1-9]+[0-9]*( )*"
+const re_normal_num = "( )*[1-9][0-9]*( )*"
 
 // 数字0
 const re_num_0 = "( )*0*( )*"
