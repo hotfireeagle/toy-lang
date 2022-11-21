@@ -74,7 +74,7 @@ func combineSpecsRegularLanguage(specs []string) string {
 }
 
 // var spec = combineSpecsRegularLanguage(languageSpecs)
-var LanguageNFA = newDFA(re_num_10)
+// var LanguageNFA = newDFA(re_num_10)
 
 func CheckIsNormalNum(str string) bool {
 	dfaobj := newDFA(re_num_10)

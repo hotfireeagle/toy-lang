@@ -12,11 +12,12 @@ const oneOrMoreOperator rune = -3
 const concatOperator rune = -4
 const unionOperator rune = -5
 const leftBracketOperator rune = -6
-const epslilonInputSymbol rune = -7
-const anyInputSymbol rune = -8
-const alphabetInputSymbol rune = -9
+const rightBracketOperator rune = -7
+const epslilonInputSymbol rune = -8
+const anyInputSymbol rune = -9
+const alphabetInputSymbol rune = -10
 
-var lastNotInputSymbol rune = -10
+var lastNotInputSymbol rune = -11
 
 var notInputSymbolMap map[rune]bool
 var notInputSymbol2IgnoreAlphabet map[rune]string
@@ -26,6 +27,7 @@ const zeroOrOneOperatorSymbolRE rune = '?'
 const oneOrMoreOperatorSymbolRE rune = '+'
 const unionOperatorSymbolRE = '|'
 const leftBracketOperatorSymbolRE = '('
+const rightBracketOperatorSymbolRE = ')'
 const anySymbolRE = "$any$"
 const alphabetSymbolRE = "$alphabet$"
 const notSymbolRE = "$not$"
@@ -33,6 +35,8 @@ const notSymbolRE = "$not$"
 const anySymbolRELen = len(anySymbolRE)
 const alphabetSymbolRELen = len(alphabetSymbolRE)
 const notSymbolRELen = len(notSymbolRE)
+
+var inputSymbolCacheMap map[rune]*inputSymbol
 
 var operatorPriority = map[rune]int{
 	starOperator:        4,
@@ -49,10 +53,15 @@ type inputSymbol struct {
 }
 
 func newInputSymbol(symbol rune, ns string) *inputSymbol {
-	return &inputSymbol{
+	if inputSymbolCacheMap[symbol] != nil {
+		return inputSymbolCacheMap[symbol]
+	}
+	ips := &inputSymbol{
 		symbolLiteral:          symbol,
 		notSymbolLiteralString: ns,
 	}
+	inputSymbolCacheMap[symbol] = ips
+	return ips
 }
 
 func newEpsilonInputSymbol() *inputSymbol {
@@ -327,6 +336,7 @@ func (d *dfa) setInputSymbols(inputSymbols []*inputSymbol) {
 }
 
 func newDFA(regexp string) *dfa {
+	inputSymbolCacheMap = make(map[rune]*inputSymbol)
 	nfaObj := newNFA(regexp)
 	dfaObj := &dfa{
 		states:          make([]int, 0),
@@ -608,7 +618,7 @@ func infix2postfix(infix []rune) []rune {
 			}
 			operatorStack.in(word)
 			shouldAddConcat = false
-		} else if word == ')' {
+		} else if word == rightBracketOperator {
 			var operator rune
 			for operatorStack.notEmpty() {
 				operator = operatorStack.out()
@@ -669,6 +679,8 @@ func preProcessForSugar(str string) []rune {
 			answer = append(answer, unionOperator)
 		} else if literal == leftBracketOperatorSymbolRE {
 			answer = append(answer, leftBracketOperator)
+		} else if literal == rightBracketOperatorSymbolRE {
+			answer = append(answer, rightBracketOperator)
 		} else if literal == '[' {
 			if str[idx+2] == '-' && str[idx+4] == ']' {
 				beginValIdx := idx + 1
@@ -689,7 +701,7 @@ func preProcessForSugar(str string) []rune {
 					for k <= endLiteral {
 						convertResult = append(convertResult, rune(k))
 						if k != endLiteral {
-							convertResult = append(convertResult, '|')
+							convertResult = append(convertResult, unionOperator)
 						}
 						k++
 					}
@@ -700,7 +712,7 @@ func preProcessForSugar(str string) []rune {
 
 					answer = append(answer, leftBracketOperator)
 					answer = append(answer, convertResult...)
-					answer = append(answer, ')')
+					answer = append(answer, rightBracketOperator)
 				} else {
 					answer = append(answer, literal)
 				}
@@ -720,7 +732,7 @@ func preProcessForSugar(str string) []rune {
 				leftBracketIdx := idx + notSymbolRELen
 				rightBracketIdx := leftBracketIdx
 
-				for str[rightBracketIdx] != ')' {
+				for str[rightBracketIdx] != rightBracketOperatorSymbolRE {
 					rightBracketIdx++
 				}
 

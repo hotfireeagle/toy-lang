@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"jpg/languagespec"
 )
 
@@ -17,5 +18,5 @@ func main() {
 
 	// fmt.Println("token", t2.Literal, t2.Type)
 
-	languagespec.CheckIsNormalNum("11")
+	fmt.Println(languagespec.CheckIsNormalNum("11"))
 }
