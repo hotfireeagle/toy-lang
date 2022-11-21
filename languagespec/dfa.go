@@ -429,7 +429,7 @@ func newDFA(regexp string) *dfa {
 	return dfaObj
 }
 
-func (d *dfa) match(str string) bool {
+func (d *dfa) Match(str string) bool {
 	currentState := d.startState
 
 	checkInputSymbolIsMatch := func(ips *inputSymbol, character rune) bool {
@@ -698,7 +698,7 @@ func preProcessForSugar(str string) []rune {
 				if isValid {
 					setNeedJumpIdx(beginValIdx, rightBracketIdx)
 
-					answer = append(answer, '(')
+					answer = append(answer, leftBracketOperator)
 					answer = append(answer, convertResult...)
 					answer = append(answer, ')')
 				} else {

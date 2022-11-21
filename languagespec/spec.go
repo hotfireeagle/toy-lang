@@ -4,21 +4,28 @@ import (
 	"strings"
 )
 
-// 平常的数字
-const re_normal_num = "( )*[1-9][0-9]*( )*"
+// TODO: 支持模版字符串
 
-// 数字0
-const re_num_0 = "( )*0*( )*"
+// 10进制数字
+const re_num_10 = "( )*(0+)|([1-9][0-9]*)( )*"
 
 // 二进制数字
-const re_num_binary2 = "( )*0b[0-1]*( )*"
+const re_num_binary2 = "( )*0b[0-1]+( )*"
 
 // 16进制数字
-const re_num_16 = "( )*0x(0|1|2|3|4|5|6|7|8|9|a|b|c|d|e|f)*( )*"
+const re_num_16 = "( )*0x(0|1|2|3|4|5|6|7|8|9|a|b|c|d|e|f)+( )*"
 
 // 变量名
-const re_identfier = "( )*([a-z]|[A-Z]|$|_)([a-z]|[A-Z]|$|_|.)*( )*"
+const re_identfier = "( )*($alphabet$|_|$)($alphabet$|_|$|[0-9])*( )*"
 
+// 双引号字符串
+const re_double_string = `( )*"($not$("))*"( )*`
+
+// 单引号字符串
+const re_single_string = `( )*'($not$('))*'( )*`
+
+// 模板字符串
+// const re_template_string = "( )*`()*`( )*"
 const re_var = "( )*var( )*"
 const re_let = "( )*let( )*"
 const re_const = "( )*const( )*"
@@ -40,8 +47,7 @@ const re_do = "( )*do( )*"
 // const re_single_row_comment = "( )*//(( )*|([0-9])*|()*)\n( )*"
 
 var languageSpecs = []string{
-	re_normal_num,
-	re_num_0,
+	re_num_10,
 	// re_num_binary2,
 	// re_num_16,
 	// re_identfier,
@@ -68,9 +74,11 @@ func combineSpecsRegularLanguage(specs []string) string {
 }
 
 // var spec = combineSpecsRegularLanguage(languageSpecs)
-// var LanguageNFA = Re2nfaConstructor(spec)
+var LanguageNFA = newDFA(re_num_10)
 
 func CheckIsNormalNum(str string) bool {
-	normalNumNFA := Re2nfaConstructor(re_normal_num)
-	return normalNumNFA.Match(str)
+	dfaobj := newDFA(re_num_10)
+	return dfaobj.Match(str)
+	// normalNumNFA := Re2nfaConstructor(re_num_10)
+	// return normalNumNFA.Match(str)
 }
