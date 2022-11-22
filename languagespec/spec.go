@@ -24,11 +24,14 @@ const re_double_string = `($whitespace$)*"($not$("))*"($whitespace$)*`
 // 单引号字符串
 const re_single_string = `($whitespace$)*'($not$('))*'($whitespace$)*`
 
-// 模板字符串
-// const re_template_string = "( )*`()*`( )*"
+// var
 const re_var = "($whitespace$)*var($whitespace$)*"
-const re_let = "( )*let( )*"
-const re_const = "( )*const( )*"
+
+// let
+const re_let = "($whitespace$)*let($whitespace$)*"
+
+// const
+const re_const = "($whitespace$)*const($whitespace$)*"
 
 const re_true = "( )*true( )*"
 const re_false = "( )*false( )*"

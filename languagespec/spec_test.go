@@ -165,3 +165,45 @@ func Test_re_var(t *testing.T) {
 		}
 	}
 }
+
+func Test_re_let(t *testing.T) {
+	letDFA := newDFA(re_let)
+
+	testCases := []struct {
+		input  string
+		output bool
+	}{
+		{"		let ", true},
+		{"let", true},
+		{" let", true},
+	}
+
+	for _, testCase := range testCases {
+		result := letDFA.Match(testCase.input)
+		if result != testCase.output {
+			t.Errorf("Test_re_let error in %s, expected to be %v but got %v", testCase.input, testCase.output, result)
+		}
+	}
+}
+
+func Test_re_const(t *testing.T) {
+	constDFA := newDFA(re_const)
+
+	testCases := []struct {
+		input  string
+		output bool
+	}{
+		{"    const    ", true},
+		{"			const  ", true},
+		{"const ", true},
+		{"  const", true},
+		{"const", true},
+	}
+
+	for _, testObj := range testCases {
+		result := constDFA.Match(testObj.input)
+		if result != testObj.output {
+			t.Errorf("Test_re_const error in %s, expected to be %v but got %v", testObj.input, testObj.output, result)
+		}
+	}
+}
