@@ -7,26 +7,26 @@ import (
 // TODO: 支持模版字符串
 
 // 10进制数字
-const re_num_10 = "( )*(0+)|([1-9][0-9]*)( )*"
+const re_num_10 = "($whitespace$)*(0+)|([1-9][0-9]*)($whitespace$)*"
 
 // 二进制数字
-const re_num_binary2 = "( )*0b[0-1]+( )*"
+const re_num_binary2 = "($whitespace$)*0b[0-1]+($whitespace$)*"
 
 // 16进制数字
-const re_num_16 = "( )*0x(0|1|2|3|4|5|6|7|8|9|a|b|c|d|e|f)+( )*"
+const re_num_16 = "($whitespace$)*0x(0|1|2|3|4|5|6|7|8|9|a|b|c|d|e|f)+($whitespace$)*"
 
 // 变量名
-const re_identfier = "( )*($alphabet$|_|$)($alphabet$|_|$|[0-9])*( )*"
+const re_identfier = "($whitespace$)*($alphabet$|_|$)($alphabet$|_|$|[0-9])*($whitespace$)*"
 
 // 双引号字符串
-const re_double_string = `( )*"($not$("))*"( )*`
+const re_double_string = `($whitespace$)*"($not$("))*"($whitespace$)*`
 
 // 单引号字符串
-const re_single_string = `( )*'($not$('))*'( )*`
+const re_single_string = `($whitespace$)*'($not$('))*'($whitespace$)*`
 
 // 模板字符串
 // const re_template_string = "( )*`()*`( )*"
-const re_var = "( )*var( )*"
+const re_var = "($whitespace$)*var($whitespace$)*"
 const re_let = "( )*let( )*"
 const re_const = "( )*const( )*"
 

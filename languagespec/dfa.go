@@ -16,8 +16,9 @@ const rightBracketOperator rune = -7
 const epslilonInputSymbol rune = -8
 const anyInputSymbol rune = -9
 const alphabetInputSymbol rune = -10
+const whiteSpaceInputSymbol rune = -11
 
-var lastNotInputSymbol rune = -11
+var lastNotInputSymbol rune = -12
 
 var notInputSymbolMap map[rune]bool
 var notInputSymbol2IgnoreAlphabet map[rune]string
@@ -31,10 +32,12 @@ const rightBracketOperatorSymbolRE = ')'
 const anySymbolRE = "$any$"
 const alphabetSymbolRE = "$alphabet$"
 const notSymbolRE = "$not$"
+const whiteSpaceSymbolRE = "$whitespace$"
 
 const anySymbolRELen = len(anySymbolRE)
 const alphabetSymbolRELen = len(alphabetSymbolRE)
 const notSymbolRELen = len(notSymbolRE)
+const whiteSpaceSymbolRELen = len(whiteSpaceSymbolRE)
 
 var inputSymbolCacheMap map[rune]*inputSymbol
 
@@ -441,12 +444,15 @@ func newDFA(regexp string) *dfa {
 
 func (d *dfa) Match(str string) bool {
 	currentState := d.startState
+	runeStr := []rune(str)
 
 	checkInputSymbolIsMatch := func(ips *inputSymbol, character rune) bool {
 		if ips.symbolLiteral == anyInputSymbol {
 			return true
 		} else if ips.symbolLiteral == alphabetInputSymbol {
 			return isAlphabet(byte(character))
+		} else if ips.symbolLiteral == whiteSpaceInputSymbol {
+			return character == ' ' || character == '	'
 		} else if checkIsNotSymbol(ips.symbolLiteral) {
 			notStr := ips.notSymbolLiteralString
 
@@ -465,27 +471,68 @@ func (d *dfa) Match(str string) bool {
 		}
 	}
 
-	for _, character := range str {
-		currentStateTransitions := d.transitionMap[currentState]
-		currentState = -1
-		for isp, nextStateId := range currentStateTransitions {
-			if checkInputSymbolIsMatch(isp, character) {
-				currentState = nextStateId
+	checkSomeStateIsFinalState := func(stateId int) bool {
+		answer := false
+
+		for _, acceptState := range d.acceptStates {
+			if acceptState == stateId {
+				answer = true
 				break
 			}
 		}
+
+		return answer
 	}
 
-	answer := false
+	var dfsCheckCanReachFinal func(s1 int, s2 int) bool
 
-	for _, acceptState := range d.acceptStates {
-		if acceptState == currentState {
-			answer = true
-			break
+	dfsCheckCanReachFinal = func(currentState int, startPos int) bool {
+		if startPos == len(runeStr) {
+			return checkSomeStateIsFinalState(currentState)
 		}
+		for i := startPos; i < len(runeStr); i++ {
+			character := runeStr[i]
+			currentStateTransitions := d.transitionMap[currentState]
+
+			for isp, nextStateId := range currentStateTransitions {
+				if checkInputSymbolIsMatch(isp, character) {
+					thisPathResult := dfsCheckCanReachFinal(nextStateId, i+1)
+
+					if thisPathResult {
+						return true
+					}
+				}
+			}
+
+			return false
+		}
+		return false
 	}
 
-	return answer
+	return dfsCheckCanReachFinal(currentState, 0)
+
+	// for _, character := range str {
+	// 	currentStateTransitions := d.transitionMap[currentState]
+	// 	currentState = -1
+	// 	for isp, nextStateId := range currentStateTransitions {
+	// 		// TODO: 对于currentStateTransitions来说，也许不仅仅只有isp是匹配的
+	// 		if checkInputSymbolIsMatch(isp, character) {
+	// 			currentState = nextStateId
+	// 			break
+	// 		}
+	// 	}
+	// }
+
+	// answer := false
+
+	// for _, acceptState := range d.acceptStates {
+	// 	if acceptState == currentState {
+	// 		answer = true
+	// 		break
+	// 	}
+	// }
+
+	// return answer
 }
 
 // TODO: minimize and rebuild dfa
@@ -727,6 +774,9 @@ func preProcessForSugar(str string) []rune {
 			} else if idx+alphabetSymbolRELen <= strLen && str[idx:idx+alphabetSymbolRELen] == alphabetSymbolRE {
 				setNeedJumpIdx(idx, idx+alphabetSymbolRELen-1)
 				answer = append(answer, alphabetInputSymbol)
+			} else if idx+whiteSpaceSymbolRELen <= strLen && str[idx:idx+whiteSpaceSymbolRELen] == whiteSpaceSymbolRE {
+				setNeedJumpIdx(idx, idx+whiteSpaceSymbolRELen-1)
+				answer = append(answer, whiteSpaceInputSymbol)
 			} else if idx+notSymbolRELen <= strLen && str[idx:idx+notSymbolRELen] == notSymbolRE {
 				// we trust the builder self, so ignore the check process
 				leftBracketIdx := idx + notSymbolRELen

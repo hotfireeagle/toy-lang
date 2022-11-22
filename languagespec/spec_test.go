@@ -132,7 +132,7 @@ func Test_re_single_string(t *testing.T) {
 		input  string
 		output bool
 	}{
-		{`			'112122302-.sds'`, true},
+		{`			'112122302-.sds'      `, true},
 		{`'112122'302-.sds'`, false},
 		{`'sjdksdksjsdsksds.sowio11ksjdskz0iosds'`, true},
 	}
@@ -141,6 +141,27 @@ func Test_re_single_string(t *testing.T) {
 		result := singleStringDFA.Match(tcase.input)
 		if result != tcase.output {
 			t.Errorf("Test_re_single_string error in %s, expected to be %v, but got %v", tcase.input, tcase.output, result)
+		}
+	}
+}
+
+func Test_re_var(t *testing.T) {
+	varDFA := newDFA(re_var)
+
+	varTestCases := []struct {
+		input  string
+		output bool
+	}{
+		{"var", true},
+		{"	 var		  ", true},
+		{"var ", true},
+		{" var", true},
+	}
+
+	for _, testObj := range varTestCases {
+		result := varDFA.Match(testObj.input)
+		if result != testObj.output {
+			t.Errorf("Test_re_var error in %s, expected to be %v, but got %v", testObj.input, testObj.output, result)
 		}
 	}
 }
