@@ -207,3 +207,247 @@ func Test_re_const(t *testing.T) {
 		}
 	}
 }
+
+func Test_re_true(t *testing.T) {
+	trueDFA := newDFA(re_true)
+
+	testCaseList := []struct {
+		input  string
+		output bool
+	}{
+		{"true  ", true},
+		{" true", true},
+		{"	true 	", true},
+		{"true", true},
+	}
+
+	for _, testObj := range testCaseList {
+		result := trueDFA.Match(testObj.input)
+		if result != testObj.output {
+			t.Errorf("Test_re_true error in %s, expectd to be %v but got %v", testObj.input, testObj.output, result)
+		}
+	}
+}
+
+func Test_re_false(t *testing.T) {
+	falseDFA := newDFA(re_false)
+
+	testCases := []struct {
+		input  string
+		output bool
+	}{
+		{"false", true},
+		{" false", true},
+		{"false	  ", true},
+		{" 	false 	", true},
+	}
+
+	for _, testObj := range testCases {
+		result := falseDFA.Match(testObj.input)
+		if result != testObj.output {
+			t.Errorf("Test_re_false error in %s, expected to be %v but got %v", testObj.input, result, testObj.output)
+		}
+	}
+}
+
+func Test_re_undefined(t *testing.T) {
+	undefinedDFA := newDFA(re_undefined)
+
+	testCases := []struct {
+		input  string
+		output bool
+	}{
+		{"undefined", true},
+		{" undefined", true},
+		{"undefined  ", true},
+		{"	undefined", true},
+		{"undefined	", true},
+		{"	 undefined	 ", true},
+	}
+
+	for _, to := range testCases {
+		result := undefinedDFA.Match(to.input)
+		if result != to.output {
+			t.Errorf("Test_re_undefined error in %s, expected to be %v but got %v", to.input, to.output, result)
+		}
+	}
+}
+
+func Test_re_null(te *testing.T) {
+	nullDFA := newDFA(re_null)
+
+	tests := []struct {
+		input  string
+		output bool
+	}{
+		{"null", true},
+		{" null", true},
+		{"	null", true},
+		{"null ", true},
+		{"null	", true},
+		{"	 null 	", true},
+	}
+
+	for _, t := range tests {
+		result := nullDFA.Match(t.input)
+		if result != t.output {
+			te.Errorf("Test_re_null error in %s, expected to be %v but got %v", t.input, t.output, result)
+		}
+	}
+}
+
+func Test_re_if(t *testing.T) {
+	ifDFA := newDFA(re_if)
+
+	cases := []struct {
+		input  string
+		output bool
+	}{
+		{"if", true},
+		{" if", true},
+		{"if ", true},
+		{"	if", true},
+		{"if	", true},
+		{"	 if 	", true},
+	}
+
+	for _, casev := range cases {
+		result := ifDFA.Match(casev.input)
+		if result != casev.output {
+			t.Errorf("Test_re_if got error in %s, expected to be %v but got %v", casev.input, casev.output, result)
+		}
+	}
+}
+
+func Test_re_else(t *testing.T) {
+	elseDFA := newDFA(re_else)
+
+	cases := []struct {
+		input  string
+		output bool
+	}{
+		{"else", true},
+		{" else", true},
+		{"	else", true},
+		{"else ", true},
+		{"else	", true},
+		{"	 else 	", true},
+	}
+
+	for _, casev := range cases {
+		result := elseDFA.Match(casev.input)
+		if result != casev.output {
+			t.Errorf("Test_re_else got error in %s, expected to be %v, but got %v", casev.input, casev.output, result)
+		}
+	}
+}
+
+func Test_re_elseif(t *testing.T) {
+	elseifDFA := newDFA(re_elseif)
+
+	cases := []struct {
+		input  string
+		output bool
+	}{
+		{"else if", true},
+		{" else  if ", true},
+		{"	else	if	", true},
+		{"	else	if", true},
+		{"else	if	", true},
+		{"	 else 	if	 ", true},
+	}
+
+	for _, cobj := range cases {
+		result := elseifDFA.Match(cobj.input)
+		if result != cobj.output {
+			t.Errorf("Test_re_elseif got error in %s, expected to be %v but got %v", cobj.input, cobj.output, result)
+		}
+	}
+}
+
+func Test_re_for(t *testing.T) {
+	fordfa := newDFA(re_for)
+
+	testcases := []struct {
+		input  string
+		output bool
+	}{
+		{"for", true},
+		{" for", true},
+		{"	for", true},
+		{"for ", true},
+		{"for	", true},
+		{"	 for 	", true},
+	}
+
+	for _, tobj := range testcases {
+		result := fordfa.Match(tobj.input)
+		if result != tobj.output {
+			t.Errorf("Test_re_for got error in %s, expected to be %v but got %v", tobj.input, tobj.output, result)
+		}
+	}
+}
+
+func Test_re_while(t *testing.T) {
+	whiledfa := newDFA(re_while)
+
+	testcases := []struct {
+		input  string
+		output bool
+	}{
+		{"while", true},
+		{" while", true},
+		{"while ", true},
+		{"	while", true},
+		{"while	", true},
+		{"	 while	 ", true},
+	}
+
+	for _, tc := range testcases {
+		result := whiledfa.Match(tc.input)
+		if result != tc.output {
+			t.Errorf("Test_re_while got error in %s, expected to be %v but got %v", tc.input, tc.output, result)
+		}
+	}
+}
+
+func Test_re_do(t *testing.T) {
+	dodfa := newDFA(re_do)
+
+	testcases := []struct {
+		input  string
+		output bool
+	}{
+		{"do", true},
+		{"	do", true},
+		{"do	", true},
+		{"	 do 	", true},
+	}
+
+	for _, tc := range testcases {
+		result := dodfa.Match(tc.input)
+
+		if result != tc.output {
+			t.Errorf("Test_re_do got")
+		}
+	}
+}
+
+func Test_re_single_row_comment(t *testing.T) {
+	scDFA := newDFA(re_single_row_comment)
+	cases := []struct {
+		input  string
+		output bool
+	}{
+		{"//sdshjds", true},
+		{" // skksd ", true},
+		{"	// ksdjksds ", true},
+	}
+
+	for _, co := range cases {
+		result := scDFA.Match(co.input)
+		if result != co.output {
+			t.Errorf("Test_re_single_row_comment got err in %s, expected to be %v, but got %v", co.input, co.output, result)
+		}
+	}
+}

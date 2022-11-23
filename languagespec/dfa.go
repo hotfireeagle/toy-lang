@@ -17,8 +17,9 @@ const epslilonInputSymbol rune = -8
 const anyInputSymbol rune = -9
 const alphabetInputSymbol rune = -10
 const whiteSpaceInputSymbol rune = -11
+const enterInputSymbol rune = -12
 
-var lastNotInputSymbol rune = -12
+var lastNotInputSymbol rune = -13
 
 var notInputSymbolMap map[rune]bool
 var notInputSymbol2IgnoreAlphabet map[rune]string
@@ -33,11 +34,17 @@ const anySymbolRE = "$any$"
 const alphabetSymbolRE = "$alphabet$"
 const notSymbolRE = "$not$"
 const whiteSpaceSymbolRE = "$whitespace$"
+const enterSpaceSymbolRE = "$enter$"
+
+const whitespace rune = ' '
+const tab rune = '	'
+const enter rune = 10
 
 const anySymbolRELen = len(anySymbolRE)
 const alphabetSymbolRELen = len(alphabetSymbolRE)
 const notSymbolRELen = len(notSymbolRE)
 const whiteSpaceSymbolRELen = len(whiteSpaceSymbolRE)
+const enterSpaceSymbolRELen = len(enterSpaceSymbolRE)
 
 var inputSymbolCacheMap map[rune]*inputSymbol
 
@@ -452,7 +459,9 @@ func (d *dfa) Match(str string) bool {
 		} else if ips.symbolLiteral == alphabetInputSymbol {
 			return isAlphabet(byte(character))
 		} else if ips.symbolLiteral == whiteSpaceInputSymbol {
-			return character == ' ' || character == '	'
+			return character == whitespace || character == tab
+		} else if ips.symbolLiteral == enterInputSymbol {
+			return character == enter
 		} else if checkIsNotSymbol(ips.symbolLiteral) {
 			notStr := ips.notSymbolLiteralString
 
@@ -777,6 +786,9 @@ func preProcessForSugar(str string) []rune {
 			} else if idx+whiteSpaceSymbolRELen <= strLen && str[idx:idx+whiteSpaceSymbolRELen] == whiteSpaceSymbolRE {
 				setNeedJumpIdx(idx, idx+whiteSpaceSymbolRELen-1)
 				answer = append(answer, whiteSpaceInputSymbol)
+			} else if idx+enterSpaceSymbolRELen <= strLen && str[idx:idx+enterSpaceSymbolRELen] == enterSpaceSymbolRE {
+				setNeedJumpIdx(idx, idx+enterSpaceSymbolRELen-1)
+				answer = append(answer, enterInputSymbol)
 			} else if idx+notSymbolRELen <= strLen && str[idx:idx+notSymbolRELen] == notSymbolRE {
 				// we trust the builder self, so ignore the check process
 				leftBracketIdx := idx + notSymbolRELen
