@@ -93,6 +93,15 @@ const re_semi = "($whitespace$)*;($whitespace$)*"
 // :
 const re_colon = "($whitespace$)*:($whitespace$)*"
 
+// .
+const re_dot = "($whitespace$)*.($whitespace$)*"
+
+// ?
+const re_question = "($whitespace$)*/?($whitespace$)*"
+
+// ?.
+const re_question_dot = "($whitespace$)*/?.($whitespace$)*"
+
 var languageSpecs = []string{
 	re_num_10,
 	re_num_binary2,
@@ -123,6 +132,9 @@ var languageSpecs = []string{
 	re_comma,
 	re_semi,
 	re_colon,
+	re_dot,
+	re_question,
+	re_question_dot,
 }
 
 func combineSpecsRegularLanguage(specs []string) string {

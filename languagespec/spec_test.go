@@ -676,3 +676,81 @@ func Test_re_colon(t *testing.T) {
 		}
 	}
 }
+
+func Test_re_dot(t *testing.T) {
+	rrdfa := newDFA(re_dot)
+
+	testCases := []struct {
+		input  string
+		output bool
+	}{
+		{" .", true},
+		{". ", true},
+		{".", true},
+		{" . 		", true},
+		{".", true},
+		{"/.", false},
+		{"a.", false},
+		{"..", false},
+		{"a.", false},
+	}
+
+	for _, tc := range testCases {
+		result := rrdfa.Match(tc.input)
+		if result != tc.output {
+			t.Errorf("Test_re_dot got error in %s, expected to be %v but got %v", tc.input, tc.output, result)
+		}
+	}
+}
+
+func Test_re_question(t *testing.T) {
+	rrdfa := newDFA(re_question)
+
+	testCases := []struct {
+		input  string
+		output bool
+	}{
+		{" ?", true},
+		{"? ", true},
+		{"?", true},
+		{" ? 		", true},
+		{"?", true},
+		{"/?", false},
+		{"a?", false},
+		{"?.", false},
+		{"a?", false},
+	}
+
+	for _, tc := range testCases {
+		result := rrdfa.Match(tc.input)
+		if result != tc.output {
+			t.Errorf("Test_re_question got error in %s, expected to be %v but got %v", tc.input, tc.output, result)
+		}
+	}
+}
+
+func Test_re_question_dot(t *testing.T) {
+	rrdfa := newDFA(re_question_dot)
+
+	testCases := []struct {
+		input  string
+		output bool
+	}{
+		{" ?.", true},
+		{"?. ", true},
+		{"?.", true},
+		{" ?. 		", true},
+		{"?.", true},
+		{"/?.", false},
+		{"a?.", false},
+		{"/?.", false},
+		{"a?.", false},
+	}
+
+	for _, tc := range testCases {
+		result := rrdfa.Match(tc.input)
+		if result != tc.output {
+			t.Errorf("Test_re_question_dot got error in %s, expected to be %v but got %v", tc.input, tc.output, result)
+		}
+	}
+}
