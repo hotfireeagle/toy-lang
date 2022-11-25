@@ -69,6 +69,30 @@ const re_single_row_comment = "($whitespace$)*//($any$)*($whitespace$)*"
 // [
 const re_left_bracket = "($whitespace$)*/[($whitespace$)*"
 
+// ]
+const re_right_bracket = "($whitespace$)*/]($whitespace$)*"
+
+// {
+const re_left_bracel = "($whitespace$)*{($whitespace$)*"
+
+// }
+const re_right_bracel = "($whitespace$)*}($whitespace$)*"
+
+// (
+const re_left_parenl = "($whitespace$)*/(($whitespace$)*"
+
+// )
+const re_right_parenl = "($whitespace$)*/)($whitespace$)*"
+
+// ,
+const re_comma = "($whitespace$)*,($whitespace$)*"
+
+// ;
+const re_semi = "($whitespace$)*;($whitespace$)*"
+
+// :
+const re_colon = "($whitespace$)*:($whitespace$)*"
+
 var languageSpecs = []string{
 	re_num_10,
 	re_num_binary2,
@@ -91,6 +115,14 @@ var languageSpecs = []string{
 	re_do,
 	re_single_row_comment,
 	re_left_bracket,
+	re_right_bracket,
+	re_left_bracel,
+	re_right_bracel,
+	re_left_parenl,
+	re_right_parenl,
+	re_comma,
+	re_semi,
+	re_colon,
 }
 
 func combineSpecsRegularLanguage(specs []string) string {

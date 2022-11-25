@@ -475,3 +475,204 @@ func Test_re_left_bracket(t *testing.T) {
 		}
 	}
 }
+
+func Test_re_right_bracket(t *testing.T) {
+	rrdfa := newDFA(re_right_bracket)
+
+	testCases := []struct {
+		input  string
+		output bool
+	}{
+		{" ]", true},
+		{"] ", true},
+		{"]", true},
+		{" ] 		", true},
+		{"[", false},
+		{"/]", false},
+		{"a", false},
+	}
+
+	for _, tc := range testCases {
+		result := rrdfa.Match(tc.input)
+		if result != tc.output {
+			t.Errorf("Test_re_right_bracket got error in %s, expected to be %v but got %v", tc.input, tc.output, result)
+		}
+	}
+}
+
+func Test_re_left_bracel(t *testing.T) {
+	rrdfa := newDFA(re_left_bracel)
+
+	testCases := []struct {
+		input  string
+		output bool
+	}{
+		{" {", true},
+		{"{ ", true},
+		{"{", true},
+		{" { 		", true},
+		{"}", false},
+		{"/{", false},
+		{"a{", false},
+	}
+
+	for _, tc := range testCases {
+		result := rrdfa.Match(tc.input)
+		if result != tc.output {
+			t.Errorf("Test_re_left_bracel got error in %s, expected to be %v but got %v", tc.input, tc.output, result)
+		}
+	}
+}
+
+func Test_re_right_bracel(t *testing.T) {
+	rrdfa := newDFA(re_right_bracel)
+
+	testCases := []struct {
+		input  string
+		output bool
+	}{
+		{" }", true},
+		{"} ", true},
+		{"}", true},
+		{" } 		", true},
+		{"{", false},
+		{"/}", false},
+		{"a}", false},
+		{".}", false},
+	}
+
+	for _, tc := range testCases {
+		result := rrdfa.Match(tc.input)
+		if result != tc.output {
+			t.Errorf("Test_re_right_bracel got error in %s, expected to be %v but got %v", tc.input, tc.output, result)
+		}
+	}
+}
+
+func Test_re_left_parenl(t *testing.T) {
+	rrdfa := newDFA(re_left_parenl)
+
+	testCases := []struct {
+		input  string
+		output bool
+	}{
+		{" (", true},
+		{"( ", true},
+		{"(", true},
+		{" ( 		", true},
+		{"(", true},
+		{"/(", false},
+		{"a(", false},
+		{".(", false},
+	}
+
+	for _, tc := range testCases {
+		result := rrdfa.Match(tc.input)
+		if result != tc.output {
+			t.Errorf("Test_re_left_parenl got error in %s, expected to be %v but got %v", tc.input, tc.output, result)
+		}
+	}
+}
+
+func Test_re_right_parenl(t *testing.T) {
+	rrdfa := newDFA(re_right_parenl)
+
+	testCases := []struct {
+		input  string
+		output bool
+	}{
+		{" )", true},
+		{") ", true},
+		{")", true},
+		{" ) 		", true},
+		{")", true},
+		{"/)", false},
+		{"a)", false},
+		{".)", false},
+	}
+
+	for _, tc := range testCases {
+		result := rrdfa.Match(tc.input)
+		if result != tc.output {
+			t.Errorf("Test_re_right_parenl got error in %s, expected to be %v but got %v", tc.input, tc.output, result)
+		}
+	}
+}
+
+func Test_re_comma(t *testing.T) {
+	rrdfa := newDFA(re_comma)
+
+	testCases := []struct {
+		input  string
+		output bool
+	}{
+		{" ,", true},
+		{", ", true},
+		{",", true},
+		{" , 		", true},
+		{",", true},
+		{"/,", false},
+		{"a,", false},
+		{".,", false},
+		{",.", false},
+	}
+
+	for _, tc := range testCases {
+		result := rrdfa.Match(tc.input)
+		if result != tc.output {
+			t.Errorf("Test_re_comma got error in %s, expected to be %v but got %v", tc.input, tc.output, result)
+		}
+	}
+}
+
+func Test_re_semi(t *testing.T) {
+	rrdfa := newDFA(re_semi)
+
+	testCases := []struct {
+		input  string
+		output bool
+	}{
+		{" ;", true},
+		{"; ", true},
+		{";", true},
+		{" ; 		", true},
+		{";", true},
+		{"/;", false},
+		{"a;", false},
+		{".;", false},
+		{";.", false},
+	}
+
+	for _, tc := range testCases {
+		result := rrdfa.Match(tc.input)
+		if result != tc.output {
+			t.Errorf("Test_re_semi got error in %s, expected to be %v but got %v", tc.input, tc.output, result)
+		}
+	}
+}
+
+func Test_re_colon(t *testing.T) {
+	rrdfa := newDFA(re_colon)
+
+	testCases := []struct {
+		input  string
+		output bool
+	}{
+		{" :", true},
+		{": ", true},
+		{":", true},
+		{" : 		", true},
+		{":", true},
+		{"/:", false},
+		{"a:", false},
+		{".:", false},
+		{":.", false},
+	}
+
+	for _, tc := range testCases {
+		result := rrdfa.Match(tc.input)
+		if result != tc.output {
+			t.Errorf("Test_re_colon got error in %s, expected to be %v but got %v", tc.input, tc.output, result)
+		}
+	}
+}
