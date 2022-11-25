@@ -18,8 +18,17 @@ const anyInputSymbol rune = -9
 const alphabetInputSymbol rune = -10
 const whiteSpaceInputSymbol rune = -11
 const enterInputSymbol rune = -12
+const starInputSymbol rune = -13
+const questionInputSymbol rune = -14
+const plusInputSymbol rune = -15
+const bitOrInputSymbol rune = -16
+const leftParenlInputSymbol rune = -17
+const rightParenlInputSymbol rune = -18
+const leftBracketInputSymbol rune = -19
+const rightBracketInputSymbol rune = -20
+const forShitInputSymbol rune = -21
 
-var lastNotInputSymbol rune = -13
+var lastNotInputSymbol rune = -555
 
 var notInputSymbolMap map[rune]bool
 var notInputSymbol2IgnoreAlphabet map[rune]string
@@ -35,6 +44,15 @@ const alphabetSymbolRE = "$alphabet$"
 const notSymbolRE = "$not$"
 const whiteSpaceSymbolRE = "$whitespace$"
 const enterSpaceSymbolRE = "$enter$"
+const starInputSymbolRE = "/*"
+const questionInputSymbolRE = "/?"
+const plusInputSymbolRE = "/+"
+const bitOrInputSymbolRE = "/|"
+const leftParenlInputSymbolRE = "/("
+const rightParenlInputSymbolRE = "/)"
+const leftBracketInputSymbolRE = "/["
+const rightBracketInputSymbolRE = "/]"
+const forShitInputSymbolRE = "//"
 
 const whitespace rune = ' '
 const tab rune = '	'
@@ -45,6 +63,15 @@ const alphabetSymbolRELen = len(alphabetSymbolRE)
 const notSymbolRELen = len(notSymbolRE)
 const whiteSpaceSymbolRELen = len(whiteSpaceSymbolRE)
 const enterSpaceSymbolRELen = len(enterSpaceSymbolRE)
+const starInputSymbolRELen = len(starInputSymbolRE)
+const questionInputSymbolRELen = len(questionInputSymbolRE)
+const plusInputSymbolRELen = len(plusInputSymbolRE)
+const bitOrInputSymbolRELen = len(bitOrInputSymbolRE)
+const leftParenlInputSymbolRELen = len(leftParenlInputSymbolRE)
+const rightParenlInputSymbolRELen = len(rightParenlInputSymbolRE)
+const leftBracketInputSymbolRELen = len(leftBracketInputSymbolRE)
+const rightBracketInputSymbolRELen = len(rightBracketInputSymbolRE)
+const forShitInputSymbolRELen = len(forShitInputSymbolRE)
 
 var inputSymbolCacheMap map[rune]*inputSymbol
 
@@ -116,7 +143,9 @@ func newNFA(infixStr string) *nfa {
 		beginEndStatePairs:  make(map[int]int),
 		inputSymbolAddedMap: make(map[*inputSymbol]bool),
 	}
+
 	infixStrAfterPreProcess := preProcessForSugar(infixStr)
+
 	postfixRunes := infix2postfix(infixStrAfterPreProcess)
 	nfaObj.postfix2NFA(postfixRunes)
 	return nfaObj
@@ -462,6 +491,24 @@ func (d *dfa) Match(str string) bool {
 			return character == whitespace || character == tab
 		} else if ips.symbolLiteral == enterInputSymbol {
 			return character == enter
+		} else if ips.symbolLiteral == starInputSymbol {
+			return character == '*'
+		} else if ips.symbolLiteral == questionInputSymbol {
+			return character == '?'
+		} else if ips.symbolLiteral == plusInputSymbol {
+			return character == '+'
+		} else if ips.symbolLiteral == bitOrInputSymbol {
+			return character == '|'
+		} else if ips.symbolLiteral == leftParenlInputSymbol {
+			return character == '('
+		} else if ips.symbolLiteral == rightParenlInputSymbol {
+			return character == ')'
+		} else if ips.symbolLiteral == leftBracketInputSymbol {
+			return character == '['
+		} else if ips.symbolLiteral == rightBracketInputSymbol {
+			return character == ']'
+		} else if ips.symbolLiteral == forShitInputSymbol {
+			return character == '/'
 		} else if checkIsNotSymbol(ips.symbolLiteral) {
 			notStr := ips.notSymbolLiteralString
 
@@ -720,12 +767,41 @@ func preProcessForSugar(str string) []rune {
 		}
 	}
 
+	strLen := len(str)
+
 	for idx, literal := range str {
 		if needJumpIdxMap[idx] {
 			continue
 		}
 
-		if literal == starOperatorSymbolRE {
+		if literal == '/' && idx+starInputSymbolRELen <= strLen && str[idx:idx+starInputSymbolRELen] == starInputSymbolRE {
+			setNeedJumpIdx(idx, idx+starInputSymbolRELen-1)
+			answer = append(answer, starInputSymbol)
+		} else if literal == '/' && idx+questionInputSymbolRELen <= strLen && str[idx:idx+questionInputSymbolRELen] == questionInputSymbolRE {
+			setNeedJumpIdx(idx, idx+questionInputSymbolRELen-1)
+			answer = append(answer, questionInputSymbol)
+		} else if literal == '/' && idx+plusInputSymbolRELen <= strLen && str[idx:idx+plusInputSymbolRELen] == plusInputSymbolRE {
+			setNeedJumpIdx(idx, idx+plusInputSymbolRELen-1)
+			answer = append(answer, plusInputSymbol)
+		} else if literal == '/' && idx+bitOrInputSymbolRELen <= strLen && str[idx:idx+bitOrInputSymbolRELen] == bitOrInputSymbolRE {
+			setNeedJumpIdx(idx, idx+bitOrInputSymbolRELen-1)
+			answer = append(answer, bitOrInputSymbol)
+		} else if literal == '/' && idx+leftParenlInputSymbolRELen <= strLen && str[idx:idx+leftParenlInputSymbolRELen] == leftParenlInputSymbolRE {
+			setNeedJumpIdx(idx, idx+leftParenlInputSymbolRELen-1)
+			answer = append(answer, leftParenlInputSymbol)
+		} else if literal == '/' && idx+rightParenlInputSymbolRELen <= strLen && str[idx:idx+rightParenlInputSymbolRELen] == rightParenlInputSymbolRE {
+			setNeedJumpIdx(idx, idx+rightParenlInputSymbolRELen-1)
+			answer = append(answer, rightParenlInputSymbol)
+		} else if literal == '/' && idx+leftBracketInputSymbolRELen <= strLen && str[idx:idx+leftBracketInputSymbolRELen] == leftBracketInputSymbolRE {
+			setNeedJumpIdx(idx, idx+leftBracketInputSymbolRELen-1)
+			answer = append(answer, leftBracketInputSymbol)
+		} else if literal == '/' && idx+rightBracketInputSymbolRELen <= strLen && str[idx:idx+rightBracketInputSymbolRELen] == rightBracketInputSymbolRE {
+			setNeedJumpIdx(idx, idx+rightBracketInputSymbolRELen-1)
+			answer = append(answer, rightBracketInputSymbol)
+		} else if literal == '/' && idx+forShitInputSymbolRELen <= strLen && str[idx:idx+forShitInputSymbolRELen] == forShitInputSymbolRE {
+			setNeedJumpIdx(idx, idx+forShitInputSymbolRELen-1)
+			answer = append(answer, forShitInputSymbol)
+		} else if literal == starOperatorSymbolRE {
 			answer = append(answer, starOperator)
 		} else if literal == zeroOrOneOperatorSymbolRE {
 			answer = append(answer, zeroOrOneOperator)
@@ -776,7 +852,7 @@ func preProcessForSugar(str string) []rune {
 				answer = append(answer, literal)
 			}
 		} else if literal == '$' {
-			strLen := len(str)
+			// strLen := len(str)
 			if idx+anySymbolRELen <= strLen && str[idx:idx+anySymbolRELen] == anySymbolRE {
 				setNeedJumpIdx(idx, idx+anySymbolRELen-1)
 				answer = append(answer, anyInputSymbol)

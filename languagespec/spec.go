@@ -66,6 +66,9 @@ const re_do = "($whitespace$)*do($whitespace$)*"
 // 单行注释
 const re_single_row_comment = "($whitespace$)*//($any$)*($whitespace$)*"
 
+// [
+const re_left_bracket = "($whitespace$)*/[($whitespace$)*"
+
 var languageSpecs = []string{
 	re_num_10,
 	re_num_binary2,
@@ -87,6 +90,7 @@ var languageSpecs = []string{
 	re_while,
 	re_do,
 	re_single_row_comment,
+	re_left_bracket,
 }
 
 func combineSpecsRegularLanguage(specs []string) string {
@@ -106,7 +110,7 @@ var spec = combineSpecsRegularLanguage(languageSpecs)
 var LanguageNFA = newDFA(spec)
 
 func CheckIsNormalNum(str string) bool {
-	dfaobj := newDFA(re_num_10)
+	dfaobj := newDFA(re_single_row_comment)
 	return dfaobj.Match(str)
 	// normalNumNFA := Re2nfaConstructor(re_num_10)
 	// return normalNumNFA.Match(str)

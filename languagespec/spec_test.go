@@ -451,3 +451,27 @@ func Test_re_single_row_comment(t *testing.T) {
 		}
 	}
 }
+
+func Test_re_left_bracket(t *testing.T) {
+	lbdfa := newDFA(re_left_bracket)
+
+	testCases := []struct {
+		input  string
+		output bool
+	}{
+		{" [", true},
+		{"[ ", true},
+		{"[", true},
+		{" [ 		", true},
+		{"]", false},
+		{"/[", false},
+		{"a", false},
+	}
+
+	for _, tc := range testCases {
+		result := lbdfa.Match(tc.input)
+		if result != tc.output {
+			t.Errorf("Test_re_left_bracket got error in %s, expected to be %v but got %v", tc.input, tc.output, result)
+		}
+	}
+}
