@@ -310,8 +310,32 @@ var spec = combineSpecsRegularLanguage(languageSpecs)
 var LanguageNFA = newDFA(spec)
 
 func CheckIsNormalNum(str string) bool {
-	dfaobj := newDFA(re_single_row_comment)
+	numREs := []string{
+		re_num_10,
+		re_num_binary2,
+		re_num_16,
+	}
+	numRE := combineSpecsRegularLanguage(numREs)
+	dfaobj := newDFA(numRE)
 	return dfaobj.Match(str)
-	// normalNumNFA := Re2nfaConstructor(re_num_10)
-	// return normalNumNFA.Match(str)
+}
+
+func CheckIsIdentfier(str string) bool {
+	identfierDFA := newDFA(re_identfier)
+	return identfierDFA.Match(str)
+}
+
+func CheckIsString(str string) bool {
+	stringRES := []string{
+		re_double_string,
+		re_single_string,
+	}
+	stringRE := combineSpecsRegularLanguage(stringRES)
+	stringDFA := newDFA(stringRE)
+	return stringDFA.Match(str)
+}
+
+func CheckIsComment(str string) bool {
+	commentDFA := newDFA(re_single_row_comment)
+	return commentDFA.Match(str)
 }

@@ -46,33 +46,36 @@ const (
 	DEFAULT        // default
 	DO             // do
 	ELSE           // else
-	FINALLY        // finally
-	FOR            // for
-	FUNCTION       // function
-	IF             // if
-	RETURN         // return
-	SWITCH         // switch
-	THROW          // throw
-	TRY            // try
-	VAR            // var
-	CONST          // const
-	WHILE          // while
-	WITH           // with
-	NEW            // new
-	THIS           // this
-	SUPER          // super
-	CLASS          // class
-	EXTENDS        // extends
-	EXPORT         // export
-	IMPORT         // import
-	NULL           // null
-	TRUE           // true
-	FALSE          // false
-	IN             // in
-	INSTANCEOF     // instanceof
-	TYPEOF         // typeof
-	VOID           // void
-	DELETE         // delete
+	ELSEIF
+	FINALLY    // finally
+	FOR        // for
+	FUNCTION   // function
+	IF         // if
+	RETURN     // return
+	SWITCH     // switch
+	THROW      // throw
+	TRY        // try
+	VAR        // var
+	LET        // let
+	CONST      // const
+	WHILE      // while
+	WITH       // with
+	NEW        // new
+	THIS       // this
+	SUPER      // super
+	CLASS      // class
+	EXTENDS    // extends
+	EXPORT     // export
+	IMPORT     // import
+	NULL       // null
+	TRUE       // true
+	FALSE      // false
+	IN         // in
+	INSTANCEOF // instanceof
+	TYPEOF     // typeof
+	VOID       // void
+	DELETE     // delete
+	UNDEFINED
 )
 
 var tokenTypeLiteral map[TokenType]string = map[TokenType]string{
@@ -119,6 +122,7 @@ var tokenTypeLiteral map[TokenType]string = map[TokenType]string{
 	DEFAULT:        "default",
 	DO:             "do",
 	ELSE:           "else",
+	ELSEIF:         "elseif",
 	FINALLY:        "finally",
 	FOR:            "for",
 	FUNCTION:       "function",
@@ -128,6 +132,7 @@ var tokenTypeLiteral map[TokenType]string = map[TokenType]string{
 	THROW:          "throw",
 	TRY:            "try",
 	VAR:            "var",
+	LET:            "let",
 	CONST:          "const",
 	WHILE:          "while",
 	WITH:           "with",
@@ -146,6 +151,7 @@ var tokenTypeLiteral map[TokenType]string = map[TokenType]string{
 	TYPEOF:         "typeof",
 	VOID:           "void",
 	DELETE:         "delete",
+	UNDEFINED:      "undefined",
 }
 
 var keyWord map[TokenType]bool = map[TokenType]bool{
@@ -157,6 +163,7 @@ var keyWord map[TokenType]bool = map[TokenType]bool{
 	DEFAULT:    true,
 	DO:         true,
 	ELSE:       true,
+	ELSEIF:     true,
 	FINALLY:    true,
 	FOR:        true,
 	FUNCTION:   true,
@@ -184,6 +191,8 @@ var keyWord map[TokenType]bool = map[TokenType]bool{
 	TYPEOF:     true,
 	VOID:       true,
 	DELETE:     true,
+	LET:        true,
+	UNDEFINED:  true,
 }
 
 func CheckTokenIsKeyword(t TokenType) bool {
