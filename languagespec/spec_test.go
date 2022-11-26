@@ -754,3 +754,821 @@ func Test_re_question_dot(t *testing.T) {
 		}
 	}
 }
+
+func Test_re_arrow(t *testing.T) {
+	rrdfa := newDFA(re_arrow)
+
+	testCases := []struct {
+		input  string
+		output bool
+	}{
+		{" =>", true},
+		{"=> ", true},
+		{"=>", true},
+		{" => 		", true},
+		{"=>", true},
+		{"/=>", false},
+		{"a=>", false},
+	}
+
+	for _, tc := range testCases {
+		result := rrdfa.Match(tc.input)
+		if result != tc.output {
+			t.Errorf("Test_re_arrow got error in %s, expected to be %v but got %v", tc.input, tc.output, result)
+		}
+	}
+}
+
+func Test_re_ellipsis(t *testing.T) {
+	rrdfa := newDFA(re_ellipsis)
+
+	testCases := []struct {
+		input  string
+		output bool
+	}{
+		{" ...", true},
+		{"... ", true},
+		{"...", true},
+		{" ... 		", true},
+		{"...", true},
+		{"/...", false},
+		{".../", false},
+	}
+
+	for _, tc := range testCases {
+		result := rrdfa.Match(tc.input)
+		if result != tc.output {
+			t.Errorf("Test_re_ellipsis got error in %s, expected to be %v but got %v", tc.input, tc.output, result)
+		}
+	}
+}
+
+func Test_re_equal(t *testing.T) {
+	rrdfa := newDFA(re_equal)
+
+	testCases := []struct {
+		input  string
+		output bool
+	}{
+		{" =", true},
+		{"= ", true},
+		{"=", true},
+		{" = 		", true},
+		{"=", true},
+		{"/=", false},
+		{"=/", false},
+	}
+
+	for _, tc := range testCases {
+		result := rrdfa.Match(tc.input)
+		if result != tc.output {
+			t.Errorf("Test_re_equal got error in %s, expected to be %v but got %v", tc.input, tc.output, result)
+		}
+	}
+}
+
+func Test_re_equality(t *testing.T) {
+	rrdfa := newDFA(re_equality)
+
+	testCases := []struct {
+		input  string
+		output bool
+	}{
+		{" ==", true},
+		{"== ", true},
+		{"==", true},
+		{" == 		", true},
+		{"/==", false},
+		{"==/", false},
+	}
+
+	for _, tc := range testCases {
+		result := rrdfa.Match(tc.input)
+		if result != tc.output {
+			t.Errorf("Test_re_equality got error in %s, expected to be %v but got %v", tc.input, tc.output, result)
+		}
+	}
+}
+
+func Test_re_bitwiseor(t *testing.T) {
+	rrdfa := newDFA(re_bitwiseor)
+
+	testCases := []struct {
+		input  string
+		output bool
+	}{
+		{" |", true},
+		{"| ", true},
+		{"|", true},
+		{" | 		", true},
+		{"/|", false},
+		{"|/", false},
+	}
+
+	for _, tc := range testCases {
+		result := rrdfa.Match(tc.input)
+		if result != tc.output {
+			t.Errorf("Test_re_bitwiseor got error in %s, expected to be %v but got %v", tc.input, tc.output, result)
+		}
+	}
+}
+
+func Test_re_bitwisexor(t *testing.T) {
+	rrdfa := newDFA(re_bitwisexor)
+
+	testCases := []struct {
+		input  string
+		output bool
+	}{
+		{" ^", true},
+		{"^ ", true},
+		{"^", true},
+		{" ^ 		", true},
+		{"/^", false},
+		{"^/", false},
+	}
+
+	for _, tc := range testCases {
+		result := rrdfa.Match(tc.input)
+		if result != tc.output {
+			t.Errorf("Test_re_bitwisexor got error in %s, expected to be %v but got %v", tc.input, tc.output, result)
+		}
+	}
+}
+
+func Test_re_bitwiseand(t *testing.T) {
+	rrdfa := newDFA(re_bitwiseand)
+
+	testCases := []struct {
+		input  string
+		output bool
+	}{
+		{" &", true},
+		{"& ", true},
+		{"&", true},
+		{" & 		", true},
+		{"/&", false},
+		{"&/", false},
+	}
+
+	for _, tc := range testCases {
+		result := rrdfa.Match(tc.input)
+		if result != tc.output {
+			t.Errorf("Test_re_bitwiseand got error in %s, expected to be %v but got %v", tc.input, tc.output, result)
+		}
+	}
+}
+
+func Test_logicor(t *testing.T) {
+	rrdfa := newDFA(re_logicor)
+
+	testCases := []struct {
+		input  string
+		output bool
+	}{
+		{" ||", true},
+		{"|| ", true},
+		{"||", true},
+		{" || 		", true},
+		{"/|/|", false},
+	}
+
+	for _, tc := range testCases {
+		result := rrdfa.Match(tc.input)
+		if result != tc.output {
+			t.Errorf("Test_logicor got error in %s, expected to be %v but got %v", tc.input, tc.output, result)
+		}
+	}
+}
+
+func Test_re_logicand(t *testing.T) {
+	rrdfa := newDFA(re_logicand)
+
+	testCases := []struct {
+		input  string
+		output bool
+	}{
+		{" &&", true},
+		{"&& ", true},
+		{"&&", true},
+		{" && 		", true},
+	}
+
+	for _, tc := range testCases {
+		result := rrdfa.Match(tc.input)
+		if result != tc.output {
+			t.Errorf("Test_re_logicand got error in %s, expected to be %v but got %v", tc.input, tc.output, result)
+		}
+	}
+}
+
+func Test_re_plus(t *testing.T) {
+	rrdfa := newDFA(re_plus)
+
+	testCases := []struct {
+		input  string
+		output bool
+	}{
+		{" +", true},
+		{"+ ", true},
+		{"+", true},
+		{" + 		", true},
+	}
+
+	for _, tc := range testCases {
+		result := rrdfa.Match(tc.input)
+		if result != tc.output {
+			t.Errorf("Test_re_plus got error in %s, expected to be %v but got %v", tc.input, tc.output, result)
+		}
+	}
+}
+
+func Test_re_min(t *testing.T) {
+	rrdfa := newDFA(re_min)
+
+	testCases := []struct {
+		input  string
+		output bool
+	}{
+		{" -", true},
+		{"- ", true},
+		{"-", true},
+		{" - 		", true},
+	}
+
+	for _, tc := range testCases {
+		result := rrdfa.Match(tc.input)
+		if result != tc.output {
+			t.Errorf("Test_re_min got error in %s, expected to be %v but got %v", tc.input, tc.output, result)
+		}
+	}
+}
+
+func Test_re_modulo(t *testing.T) {
+	rrdfa := newDFA(re_modulo)
+
+	testCases := []struct {
+		input  string
+		output bool
+	}{
+		{" %", true},
+		{"% ", true},
+		{"%", true},
+		{" % 		", true},
+	}
+
+	for _, tc := range testCases {
+		result := rrdfa.Match(tc.input)
+		if result != tc.output {
+			t.Errorf("Test_re_modulo got error in %s, expected to be %v but got %v", tc.input, tc.output, result)
+		}
+	}
+}
+
+func Test_re_bitleftshift(t *testing.T) {
+	rrdfa := newDFA(re_bitleftshift)
+
+	testCases := []struct {
+		input  string
+		output bool
+	}{
+		{" <<", true},
+		{"<< ", true},
+		{"<<", true},
+		{" << 		", true},
+	}
+
+	for _, tc := range testCases {
+		result := rrdfa.Match(tc.input)
+		if result != tc.output {
+			t.Errorf("Test_re_bitleftshift got error in %s, expected to be %v but got %v", tc.input, tc.output, result)
+		}
+	}
+}
+
+func Test_re_bitrightshift(t *testing.T) {
+	rrdfa := newDFA(re_bitrightshift)
+
+	testCases := []struct {
+		input  string
+		output bool
+	}{
+		{" >>", true},
+		{">> ", true},
+		{">>", true},
+		{" >> 		", true},
+	}
+
+	for _, tc := range testCases {
+		result := rrdfa.Match(tc.input)
+		if result != tc.output {
+			t.Errorf("Test_re_bitrightshift got error in %s, expected to be %v but got %v", tc.input, tc.output, result)
+		}
+	}
+}
+
+func Test_re_bitrightshift3(t *testing.T) {
+	rrdfa := newDFA(re_bitrightshift3)
+
+	testCases := []struct {
+		input  string
+		output bool
+	}{
+		{" >>>", true},
+		{">>> ", true},
+		{">>>", true},
+		{" >>> 		", true},
+	}
+
+	for _, tc := range testCases {
+		result := rrdfa.Match(tc.input)
+		if result != tc.output {
+			t.Errorf("Test_re_bitrightshift3 got error in %s, expected to be %v but got %v", tc.input, tc.output, result)
+		}
+	}
+}
+
+func Test_re_break(t *testing.T) {
+	rrdfa := newDFA(re_break)
+
+	testCases := []struct {
+		input  string
+		output bool
+	}{
+		{" break", true},
+		{"break ", true},
+		{"break", true},
+		{" break 		", true},
+	}
+
+	for _, tc := range testCases {
+		result := rrdfa.Match(tc.input)
+		if result != tc.output {
+			t.Errorf("Test_re_break got error in %s, expected to be %v but got %v", tc.input, tc.output, result)
+		}
+	}
+}
+
+func Test_re_case(t *testing.T) {
+	rrdfa := newDFA(re_case)
+
+	testCases := []struct {
+		input  string
+		output bool
+	}{
+		{" case", true},
+		{"case ", true},
+		{"case", true},
+		{" case 		", true},
+	}
+
+	for _, tc := range testCases {
+		result := rrdfa.Match(tc.input)
+		if result != tc.output {
+			t.Errorf("Test_re_case got error in %s, expected to be %v but got %v", tc.input, tc.output, result)
+		}
+	}
+}
+
+func Test_re_catch(t *testing.T) {
+	rrdfa := newDFA(re_catch)
+
+	testCases := []struct {
+		input  string
+		output bool
+	}{
+		{" catch", true},
+		{"catch ", true},
+		{"catch", true},
+		{" catch 		", true},
+	}
+
+	for _, tc := range testCases {
+		result := rrdfa.Match(tc.input)
+		if result != tc.output {
+			t.Errorf("Test_re_catch got error in %s, expected to be %v but got %v", tc.input, tc.output, result)
+		}
+	}
+}
+
+func Test_re_continue(t *testing.T) {
+	rrdfa := newDFA(re_continue)
+
+	testCases := []struct {
+		input  string
+		output bool
+	}{
+		{" continue", true},
+		{"continue ", true},
+		{"continue", true},
+		{" continue 		", true},
+	}
+
+	for _, tc := range testCases {
+		result := rrdfa.Match(tc.input)
+		if result != tc.output {
+			t.Errorf("Test_re_continue got error in %s, expected to be %v but got %v", tc.input, tc.output, result)
+		}
+	}
+}
+
+func Test_re_default(t *testing.T) {
+	rrdfa := newDFA(re_default)
+
+	testCases := []struct {
+		input  string
+		output bool
+	}{
+		{" default", true},
+		{"default ", true},
+		{"default", true},
+		{" default 		", true},
+	}
+
+	for _, tc := range testCases {
+		result := rrdfa.Match(tc.input)
+		if result != tc.output {
+			t.Errorf("Test_re_default got error in %s, expected to be %v but got %v", tc.input, tc.output, result)
+		}
+	}
+}
+
+func Test_re_finally(t *testing.T) {
+	rrdfa := newDFA(re_finally)
+
+	testCases := []struct {
+		input  string
+		output bool
+	}{
+		{" finally", true},
+		{"finally ", true},
+		{" finally 		", true},
+	}
+
+	for _, tc := range testCases {
+		result := rrdfa.Match(tc.input)
+		if result != tc.output {
+			t.Errorf("Test_re_finally got error in %s, expected to be %v but got %v", tc.input, tc.output, result)
+		}
+	}
+}
+
+func Test_re_function(t *testing.T) {
+	rrdfa := newDFA(re_function)
+
+	testCases := []struct {
+		input  string
+		output bool
+	}{
+		{" function", true},
+		{"function ", true},
+		{" function 		", true},
+	}
+
+	for _, tc := range testCases {
+		result := rrdfa.Match(tc.input)
+		if result != tc.output {
+			t.Errorf("Test_re_function got error in %s, expected to be %v but got %v", tc.input, tc.output, result)
+		}
+	}
+}
+
+func Test_re_return(t *testing.T) {
+	rrdfa := newDFA(re_return)
+
+	testCases := []struct {
+		input  string
+		output bool
+	}{
+		{" return", true},
+		{"return ", true},
+		{" return 		", true},
+	}
+
+	for _, tc := range testCases {
+		result := rrdfa.Match(tc.input)
+		if result != tc.output {
+			t.Errorf("Test_re_return got error in %s, expected to be %v but got %v", tc.input, tc.output, result)
+		}
+	}
+}
+
+func Test_re_switch(t *testing.T) {
+	rrdfa := newDFA(re_switch)
+
+	testCases := []struct {
+		input  string
+		output bool
+	}{
+		{" switch", true},
+		{"switch ", true},
+		{" switch 		", true},
+	}
+
+	for _, tc := range testCases {
+		result := rrdfa.Match(tc.input)
+		if result != tc.output {
+			t.Errorf("Test_re_switch got error in %s, expected to be %v but got %v", tc.input, tc.output, result)
+		}
+	}
+}
+
+func Test_re_throw(t *testing.T) {
+	rrdfa := newDFA(re_throw)
+
+	testCases := []struct {
+		input  string
+		output bool
+	}{
+		{" throw", true},
+		{"throw ", true},
+		{" throw 		", true},
+	}
+
+	for _, tc := range testCases {
+		result := rrdfa.Match(tc.input)
+		if result != tc.output {
+			t.Errorf("Test_re_throw got error in %s, expected to be %v but got %v", tc.input, tc.output, result)
+		}
+	}
+}
+
+func Test_re_try(t *testing.T) {
+	rrdfa := newDFA(re_try)
+
+	testCases := []struct {
+		input  string
+		output bool
+	}{
+		{" try", true},
+		{"try ", true},
+		{" try 		", true},
+	}
+
+	for _, tc := range testCases {
+		result := rrdfa.Match(tc.input)
+		if result != tc.output {
+			t.Errorf("Test_re_try got error in %s, expected to be %v but got %v", tc.input, tc.output, result)
+		}
+	}
+}
+
+func Test_re_with(t *testing.T) {
+	rrdfa := newDFA(re_with)
+
+	testCases := []struct {
+		input  string
+		output bool
+	}{
+		{" with", true},
+		{"with ", true},
+		{" with 		", true},
+	}
+
+	for _, tc := range testCases {
+		result := rrdfa.Match(tc.input)
+		if result != tc.output {
+			t.Errorf("Test_re_with got error in %s, expected to be %v but got %v", tc.input, tc.output, result)
+		}
+	}
+}
+
+func Test_re_new(t *testing.T) {
+	rrdfa := newDFA(re_new)
+
+	testCases := []struct {
+		input  string
+		output bool
+	}{
+		{" new", true},
+		{"new ", true},
+		{" new 		", true},
+	}
+
+	for _, tc := range testCases {
+		result := rrdfa.Match(tc.input)
+		if result != tc.output {
+			t.Errorf("Test_re_new got error in %s, expected to be %v but got %v", tc.input, tc.output, result)
+		}
+	}
+}
+
+func Test_re_this(t *testing.T) {
+	rrdfa := newDFA(re_this)
+
+	testCases := []struct {
+		input  string
+		output bool
+	}{
+		{" this", true},
+		{"this ", true},
+		{" this 		", true},
+	}
+
+	for _, tc := range testCases {
+		result := rrdfa.Match(tc.input)
+		if result != tc.output {
+			t.Errorf("Test_re_this got error in %s, expected to be %v but got %v", tc.input, tc.output, result)
+		}
+	}
+}
+
+func Test_re_super(t *testing.T) {
+	rrdfa := newDFA(re_super)
+
+	testCases := []struct {
+		input  string
+		output bool
+	}{
+		{" super", true},
+		{"super ", true},
+		{" super 		", true},
+	}
+
+	for _, tc := range testCases {
+		result := rrdfa.Match(tc.input)
+		if result != tc.output {
+			t.Errorf("Test_re_super got error in %s, expected to be %v but got %v", tc.input, tc.output, result)
+		}
+	}
+}
+
+func Test_re_class(t *testing.T) {
+	rrdfa := newDFA(re_class)
+
+	testCases := []struct {
+		input  string
+		output bool
+	}{
+		{" class", true},
+		{"class ", true},
+		{" class 		", true},
+	}
+
+	for _, tc := range testCases {
+		result := rrdfa.Match(tc.input)
+		if result != tc.output {
+			t.Errorf("Test_re_class got error in %s, expected to be %v but got %v", tc.input, tc.output, result)
+		}
+	}
+}
+
+func Test_re_extends(t *testing.T) {
+	rrdfa := newDFA(re_extends)
+
+	testCases := []struct {
+		input  string
+		output bool
+	}{
+		{" extends", true},
+		{"extends ", true},
+		{" extends 		", true},
+	}
+
+	for _, tc := range testCases {
+		result := rrdfa.Match(tc.input)
+		if result != tc.output {
+			t.Errorf("Test_re_extends got error in %s, expected to be %v but got %v", tc.input, tc.output, result)
+		}
+	}
+}
+
+func Test_re_export(t *testing.T) {
+	rrdfa := newDFA(re_export)
+
+	testCases := []struct {
+		input  string
+		output bool
+	}{
+		{" export", true},
+		{"export ", true},
+		{" export 		", true},
+	}
+
+	for _, tc := range testCases {
+		result := rrdfa.Match(tc.input)
+		if result != tc.output {
+			t.Errorf("Test_re_export got error in %s, expected to be %v but got %v", tc.input, tc.output, result)
+		}
+	}
+}
+
+func Test_re_import(t *testing.T) {
+	rrdfa := newDFA(re_import)
+
+	testCases := []struct {
+		input  string
+		output bool
+	}{
+		{" import", true},
+		{"import ", true},
+		{" import 		", true},
+	}
+
+	for _, tc := range testCases {
+		result := rrdfa.Match(tc.input)
+		if result != tc.output {
+			t.Errorf("Test_re_import got error in %s, expected to be %v but got %v", tc.input, tc.output, result)
+		}
+	}
+}
+
+func Test_re_in(t *testing.T) {
+	rrdfa := newDFA(re_in)
+
+	testCases := []struct {
+		input  string
+		output bool
+	}{
+		{" in", true},
+		{"in ", true},
+		{" in 		", true},
+	}
+
+	for _, tc := range testCases {
+		result := rrdfa.Match(tc.input)
+		if result != tc.output {
+			t.Errorf("Test_re_in got error in %s, expected to be %v but got %v", tc.input, tc.output, result)
+		}
+	}
+}
+
+func Test_re_instanceof(t *testing.T) {
+	rrdfa := newDFA(re_instanceof)
+
+	testCases := []struct {
+		input  string
+		output bool
+	}{
+		{" instanceof", true},
+		{"instanceof ", true},
+		{" instanceof 		", true},
+	}
+
+	for _, tc := range testCases {
+		result := rrdfa.Match(tc.input)
+		if result != tc.output {
+			t.Errorf("Test_re_instanceof got error in %s, expected to be %v but got %v", tc.input, tc.output, result)
+		}
+	}
+}
+
+func Test_re_typeof(t *testing.T) {
+	rrdfa := newDFA(re_typeof)
+
+	testCases := []struct {
+		input  string
+		output bool
+	}{
+		{" typeof", true},
+		{"typeof ", true},
+		{" typeof 		", true},
+	}
+
+	for _, tc := range testCases {
+		result := rrdfa.Match(tc.input)
+		if result != tc.output {
+			t.Errorf("Test_re_typeof got error in %s, expected to be %v but got %v", tc.input, tc.output, result)
+		}
+	}
+}
+
+func Test_re_void(t *testing.T) {
+	rrdfa := newDFA(re_void)
+
+	testCases := []struct {
+		input  string
+		output bool
+	}{
+		{" void", true},
+		{"void ", true},
+		{" void 		", true},
+	}
+
+	for _, tc := range testCases {
+		result := rrdfa.Match(tc.input)
+		if result != tc.output {
+			t.Errorf("Test_re_void got error in %s, expected to be %v but got %v", tc.input, tc.output, result)
+		}
+	}
+}
+
+func Test_re_delete(t *testing.T) {
+	rrdfa := newDFA(re_delete)
+
+	testCases := []struct {
+		input  string
+		output bool
+	}{
+		{" delete", true},
+		{"delete ", true},
+		{" delete 		", true},
+	}
+
+	for _, tc := range testCases {
+		result := rrdfa.Match(tc.input)
+		if result != tc.output {
+			t.Errorf("Test_re_delete got error in %s, expected to be %v but got %v", tc.input, tc.output, result)
+		}
+	}
+}

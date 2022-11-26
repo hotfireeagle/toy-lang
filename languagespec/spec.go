@@ -102,6 +102,123 @@ const re_question = "($whitespace$)*/?($whitespace$)*"
 // ?.
 const re_question_dot = "($whitespace$)*/?.($whitespace$)*"
 
+// =>
+const re_arrow = "($whitespace$)*=>($whitespace$)*"
+
+// ...
+const re_ellipsis = "($whitespace$)*...($whitespace$)*"
+
+// =
+const re_equal = "($whitespace$)*=($whitespace$)*"
+
+// ==
+const re_equality = "($whitespace$)*==($whitespace$)*"
+
+// |
+const re_bitwiseor = "($whitespace$)*/|($whitespace$)*"
+
+// ^
+const re_bitwisexor = "($whitespace$)*^($whitespace$)*"
+
+// &
+const re_bitwiseand = "($whitespace$)*&($whitespace$)*"
+
+// ||
+const re_logicor = "($whitespace$)*/|/|($whitespace$)*"
+
+// &&
+const re_logicand = "($whitespace$)*&&($whitespace$)*"
+
+// +
+const re_plus = "($whitespace$)*/+($whitespace$)*"
+
+// -
+const re_min = "($whitespace$)*-($whitespace$)*"
+
+// %
+const re_modulo = "($whitespace$)*%($whitespace$)*"
+
+// <<
+const re_bitleftshift = "($whitespace$)*<<($whitespace$)*"
+
+// >>
+const re_bitrightshift = "($whitespace$)*>>($whitespace$)*"
+
+// >>>
+const re_bitrightshift3 = "($whitespace$)*>>>($whitespace$)*"
+
+// break
+const re_break = "($whitespace$)*break($whitespace$)*"
+
+// case
+const re_case = "($whitespace$)*case($whitespace$)*"
+
+// catch
+const re_catch = "($whitespace$)*catch($whitespace$)*"
+
+// continue
+const re_continue = "($whitespace$)*continue($whitespace$)*"
+
+// default
+const re_default = "($whitespace$)*default($whitespace$)*"
+
+// finally
+const re_finally = "($whitespace$)*finally($whitespace$)*"
+
+// function
+const re_function = "($whitespace$)*function($whitespace$)*"
+
+// return
+const re_return = "($whitespace$)*return($whitespace$)*"
+
+// switch
+const re_switch = "($whitespace$)*switch($whitespace$)*"
+
+// throw
+const re_throw = "($whitespace$)*throw($whitespace$)*"
+
+// try
+const re_try = "($whitespace$)*try($whitespace$)*"
+
+// with
+const re_with = "($whitespace$)*with($whitespace$)*"
+
+// new
+const re_new = "($whitespace$)*new($whitespace$)*"
+
+// this
+const re_this = "($whitespace$)*this($whitespace$)*"
+
+// super
+const re_super = "($whitespace$)*super($whitespace$)*"
+
+// class
+const re_class = "($whitespace$)*class($whitespace$)*"
+
+// extends
+const re_extends = "($whitespace$)*extends($whitespace$)*"
+
+// export
+const re_export = "($whitespace$)*export($whitespace$)*"
+
+// import
+const re_import = "($whitespace$)*import($whitespace$)*"
+
+// in
+const re_in = "($whitespace$)*in($whitespace$)*"
+
+// instanceof
+const re_instanceof = "($whitespace$)*instanceof($whitespace$)*"
+
+// typeof
+const re_typeof = "($whitespace$)*typeof($whitespace$)*"
+
+// void
+const re_void = "($whitespace$)*void($whitespace$)*"
+
+// delete
+const re_delete = "($whitespace$)*delete($whitespace$)*"
+
 var languageSpecs = []string{
 	re_num_10,
 	re_num_binary2,
@@ -135,6 +252,45 @@ var languageSpecs = []string{
 	re_dot,
 	re_question,
 	re_question_dot,
+	re_arrow,
+	re_ellipsis,
+	re_equal,
+	re_equality,
+	re_bitwiseor,
+	re_bitwisexor,
+	re_bitwiseand,
+	re_logicor,
+	re_logicand,
+	re_plus,
+	re_min,
+	re_modulo,
+	re_bitleftshift,
+	re_bitrightshift,
+	re_bitrightshift3,
+	re_break,
+	re_case,
+	re_catch,
+	re_continue,
+	re_default,
+	re_finally,
+	re_function,
+	re_return,
+	re_switch,
+	re_throw,
+	re_try,
+	re_with,
+	re_new,
+	re_this,
+	re_super,
+	re_class,
+	re_extends,
+	re_export,
+	re_import,
+	re_in,
+	re_instanceof,
+	re_typeof,
+	re_void,
+	re_delete,
 }
 
 func combineSpecsRegularLanguage(specs []string) string {
