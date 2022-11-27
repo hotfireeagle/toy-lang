@@ -72,6 +72,10 @@ func (fr *FileReader) NextRune() rune {
 	}
 }
 
+func (fr *FileReader) Backtrack() {
+	fr.tr.Backtrack()
+}
+
 func (fr *FileReader) PeekCurrentRune() (rune, error) {
 	return fr.tr.PeekCurrentRune()
 }

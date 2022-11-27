@@ -11,6 +11,7 @@ type InputReader interface {
 	NextRune() rune
 	PeekCurrentRune() (rune, error)
 	PeekNextNRune(n int) (rune, error)
+	Backtrack()
 }
 
 func New(mode ReaderMode, filePathOrContent string) InputReader {

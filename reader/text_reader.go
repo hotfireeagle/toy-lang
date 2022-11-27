@@ -33,6 +33,12 @@ func (tr *TextReader) NextRune() rune {
 	return nextRune
 }
 
+func (tr *TextReader) Backtrack() {
+	if tr.runePosition > 0 {
+		tr.runePosition -= 1
+	}
+}
+
 func (tr *TextReader) PeekCurrentRune() (rune, error) {
 	if tr.runePosition == -1 {
 		return constant.EOF, constant.ErrNextRune
