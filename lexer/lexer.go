@@ -54,20 +54,25 @@ func New(r reader.InputReader) *Lexer {
 // 	}
 // }
 
-func (l *Lexer) NextToken() *tokentype.Token {
+func (l *Lexer) NextToken() (*tokentype.Token, bool) {
 	var lastMatchTokenType tokentype.TokenType
 	var sb strings.Builder
 
-	var greed func() *tokentype.Token
+	var greed func() (*tokentype.Token, bool)
 
-	greed = func() *tokentype.Token {
+	greed = func() (*tokentype.Token, bool) {
 		ru := l.reader.NextRune()
+
+		// TODO: not correct when we plan to support the template string
+		if ru == 10 {
+			return l.NextToken()
+		}
 
 		if ru == constant.EOF {
 			if lastMatchTokenType == 0 {
 				panic("Invalid syntax")
 			} else {
-				return tokentype.New(lastMatchTokenType, strings.TrimSpace(sb.String()))
+				return tokentype.New(lastMatchTokenType, strings.TrimSpace(sb.String())), true
 			}
 		} else {
 			sb.WriteRune(ru)
@@ -212,7 +217,7 @@ func (l *Lexer) NextToken() *tokentype.Token {
 					if lastMatchTokenType != 0 {
 						l.reader.Backtrack()
 						s2 := str[0 : len(str)-1]
-						return tokentype.New(lastMatchTokenType, strings.TrimSpace(s2))
+						return tokentype.New(lastMatchTokenType, strings.TrimSpace(s2)), false
 					} else {
 						return greed()
 					}

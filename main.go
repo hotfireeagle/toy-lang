@@ -7,11 +7,17 @@ import (
 )
 
 func main() {
-	codeString := "sjdsjkdjskdjskdjkskdsjdjsjk"
-	reader := reader.New(reader.TextMode, codeString)
+	// codeString := "sjdsjkdjskdjskdjkskdsjdjsjk"
+	filePath := "/Users/smallhai/learn/gitRepo/jpg/test.js"
+	reader := reader.New(reader.FileMode, filePath)
 	lexer := lexer.New(reader)
 
-	token := lexer.NextToken()
+	token, end := lexer.NextToken()
+
+	for !end {
+		fmt.Println("token", token.Literal, token.Type)
+		token, end = lexer.NextToken()
+	}
 
 	fmt.Println("token", token.Literal, token.Type)
 }
