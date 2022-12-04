@@ -2,22 +2,21 @@ package main
 
 import (
 	"fmt"
-	"jpg/lexer"
-	"jpg/reader"
+	"jpg/languagespec"
 )
 
 func main() {
+	var str string = `"w"`
+	fmt.Println("check is string", languagespec.StringDoubleDFA.Match(str))
 	// codeString := "sjdsjkdjskdjskdjkskdsjdjsjk"
-	filePath := "/Users/smallhai/learn/gitRepo/jpg/test.js"
-	reader := reader.New(reader.FileMode, filePath)
-	lexer := lexer.New(reader)
+	// filePath := "/Users/smallhai/learn/gitRepo/jpg/test.js"
+	// reader := reader.New(reader.FileMode, filePath)
+	// lexer := lexer.New(reader)
 
-	token, end := lexer.NextToken()
+	// token := lexer.NextToken()
 
-	for !end {
-		fmt.Println("token", token.Literal, token.Type)
-		token, end = lexer.NextToken()
-	}
-
-	fmt.Println("token", token.Literal, token.Type)
+	// for !token.IsEof() {
+	// 	fmt.Println("token", token.Literal, token.Type)
+	// 	token = lexer.NextToken()
+	// }
 }

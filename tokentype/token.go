@@ -17,3 +17,7 @@ func New(t TokenType, s string) *Token {
 		s,
 	}
 }
+
+func (t *Token) IsEof() bool {
+	return t.Type == EOF
+}

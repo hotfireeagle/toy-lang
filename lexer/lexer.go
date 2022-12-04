@@ -10,11 +10,13 @@ import (
 
 type Lexer struct {
 	reader reader.InputReader
+	isEnd  bool
 }
 
 func New(r reader.InputReader) *Lexer {
 	return &Lexer{
 		reader: r,
+		isEnd:  false,
 	}
 }
 
@@ -54,13 +56,19 @@ func New(r reader.InputReader) *Lexer {
 // 	}
 // }
 
-func (l *Lexer) NextToken() (*tokentype.Token, bool) {
+// TODO: 表示为true的时候，不能直接表示为true
+// TODO: 只需要返回一个token参数就可以了
+func (l *Lexer) NextToken() *tokentype.Token {
+	if l.isEnd {
+		return tokentype.New(tokentype.EOF, "")
+	}
+
 	var lastMatchTokenType tokentype.TokenType
 	var sb strings.Builder
 
-	var greed func() (*tokentype.Token, bool)
+	var greed func() *tokentype.Token
 
-	greed = func() (*tokentype.Token, bool) {
+	greed = func() *tokentype.Token {
 		ru := l.reader.NextRune()
 
 		// TODO: not correct when we plan to support the template string
@@ -72,7 +80,8 @@ func (l *Lexer) NextToken() (*tokentype.Token, bool) {
 			if lastMatchTokenType == 0 {
 				panic("Invalid syntax")
 			} else {
-				return tokentype.New(lastMatchTokenType, strings.TrimSpace(sb.String())), true
+				l.isEnd = true
+				return tokentype.New(lastMatchTokenType, strings.TrimSpace(sb.String()))
 			}
 		} else {
 			sb.WriteRune(ru)
@@ -217,7 +226,7 @@ func (l *Lexer) NextToken() (*tokentype.Token, bool) {
 					if lastMatchTokenType != 0 {
 						l.reader.Backtrack()
 						s2 := str[0 : len(str)-1]
-						return tokentype.New(lastMatchTokenType, strings.TrimSpace(s2)), false
+						return tokentype.New(lastMatchTokenType, strings.TrimSpace(s2))
 					} else {
 						return greed()
 					}

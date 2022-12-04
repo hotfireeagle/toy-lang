@@ -375,6 +375,7 @@ func (d *dfa) setInputSymbols(inputSymbols []*inputSymbol) {
 }
 
 func newDFA(regexp string) *dfa {
+	lastNotInputSymbol = -555
 	inputSymbolCacheMap = make(map[rune]*inputSymbol)
 	nfaObj := newNFA(regexp)
 	dfaObj := &dfa{
