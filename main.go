@@ -2,20 +2,19 @@ package main
 
 import (
 	"fmt"
-	"jpg/lexer"
-	"jpg/reader"
+	"jpg/repl"
+	"os"
+	"os/user"
 )
 
 func main() {
-	// codeString := "sjdsjkdjskdjskdjkskdsjdjsjk"
-	filePath := "/Users/smallhai/learn/gitRepo/jpg/test.js"
-	reader := reader.New(reader.FileMode, filePath)
-	lexer := lexer.New(reader)
+	u, err := user.Current()
 
-	token := lexer.NextToken()
-
-	for !token.IsEof() {
-		fmt.Println("token", token.Literal, token.Type)
-		token = lexer.NextToken()
+	if err != nil {
+		panic(err)
 	}
+
+	fmt.Printf("Hello %s, Try this!\n", u.Username)
+
+	repl.Start(os.Stdin, os.Stdout)
 }
