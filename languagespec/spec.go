@@ -377,9 +377,6 @@ var TypeofDFA = newDFA(re_typeof)
 var VoidDFA = newDFA(re_void)
 var DeleteDFA = newDFA(re_delete)
 
-var spec = combineSpecsRegularLanguage(languageSpecs)
-var LanguageNFA = newDFA(spec)
-
 func CheckIsNormalNum(str string) bool {
 	numREs := []string{
 		re_num_10,
