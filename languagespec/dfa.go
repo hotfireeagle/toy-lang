@@ -567,124 +567,7 @@ func (d *dfa) Match(str string) bool {
 	}
 
 	return dfsCheckCanReachFinal(currentState, 0)
-
-	// for _, character := range str {
-	// 	currentStateTransitions := d.transitionMap[currentState]
-	// 	currentState = -1
-	// 	for isp, nextStateId := range currentStateTransitions {
-	// 		// TODO: 对于currentStateTransitions来说，也许不仅仅只有isp是匹配的
-	// 		if checkInputSymbolIsMatch(isp, character) {
-	// 			currentState = nextStateId
-	// 			break
-	// 		}
-	// 	}
-	// }
-
-	// answer := false
-
-	// for _, acceptState := range d.acceptStates {
-	// 	if acceptState == currentState {
-	// 		answer = true
-	// 		break
-	// 	}
-	// }
-
-	// return answer
 }
-
-// TODO: minimize and rebuild dfa
-// func (d *dfa) minimize() *dfa {
-// 	dfaAllStates := d.states
-// 	dfaAcceptStates := d.acceptStates
-// 	dfaAcceptStateMapObj := make(map[int]bool)
-
-// 	for _, s := range dfaAcceptStates {
-// 		dfaAcceptStateMapObj[s] = true
-// 	}
-
-// 	acceptStates := make([]int, len(dfaAcceptStates))
-// 	copy(acceptStates, dfaAcceptStates)
-// 	unacceptStates := make([]int, 0)
-
-// 	for _, stateId := range dfaAllStates {
-// 		if !dfaAcceptStateMapObj[stateId] {
-// 			unacceptStates = append(unacceptStates, stateId)
-// 		}
-// 	}
-
-// 	setPool := [][]int{
-// 		acceptStates,
-// 		unacceptStates,
-// 	}
-
-// 	// 某个set沿着某个inputSymbol所到达的下一个set
-// 	set2setByInputSymbol := func(sets []int, ips *inputSymbol) []int {
-// 		newSet := make([]int, 0)
-// 		addedSetId := make(map[int]bool)
-
-// 		for _, fromSetId := range sets {
-// 			nextStateId := d.transitionMap[fromSetId][ips]
-// 			if !addedSetId[nextStateId] {
-// 				addedSetId[nextStateId] = true
-// 				newSet = append(newSet, nextStateId)
-// 			}
-// 		}
-
-// 		return newSet
-// 	}
-
-// 	// 判断当前set是否是setPool的的子集
-// 	checkSetIsSubSetOfSetPool := func(someSet []int) bool {
-// 		setPoolMaps := make([]map[int]bool, 0)
-
-// 		for _, setlist := range setPool {
-// 			setmap := make(map[int]bool)
-// 			for _, setid := range setlist {
-// 				setmap[setid] = true
-// 			}
-// 			setPoolMaps = append(setPoolMaps, setmap)
-// 		}
-
-// 		for _, setPoolMap := range setPoolMaps {
-// 			isCurrentSetPoolMapSubset := true
-// 			for _, currentSetId := range someSet {
-// 				if setPoolMap[currentSetId] == false {
-// 					isCurrentSetPoolMapSubset = false
-// 					break
-// 				}
-// 			}
-// 			if isCurrentSetPoolMapSubset {
-// 				return true
-// 			}
-// 		}
-
-// 		return false
-// 	}
-
-// 	checkSomeSetNeedDivide := func(someSet []int) bool {
-// 		inputSymbolList := d.inputSymbols
-
-// 		// 但凡某个set针对某个输入symbol不是现存set池所有set的子集，那么就认为它需要分裂
-
-// 		shouldDivide := false
-
-// 		for _, ips := range inputSymbolList {
-// 			// 当前set针对这个输入symbol所能到达的下一个状态set
-// 			nextStateSet := set2setByInputSymbol(someSet, ips)
-
-// 			if !checkSetIsSubSetOfSetPool(nextStateSet) {
-// 				// 说明这个nextStateSet集合不是当前的集合池子中任意一个集合的子集
-// 				// 既然如此，那么表明，需要分裂，且无需在判断其它输入了
-// 				shouldDivide = true
-// 				break
-// 			}
-// 		}
-
-// 		return shouldDivide
-// 	}
-
-// 	return nil
-// }
 
 func infix2postfix(infix []rune) []rune {
 	operatorStack := newRuneStack()
@@ -853,7 +736,6 @@ func preProcessForSugar(str string) []rune {
 				answer = append(answer, literal)
 			}
 		} else if literal == '$' {
-			// strLen := len(str)
 			if idx+anySymbolRELen <= strLen && str[idx:idx+anySymbolRELen] == anySymbolRE {
 				setNeedJumpIdx(idx, idx+anySymbolRELen-1)
 				answer = append(answer, anyInputSymbol)
