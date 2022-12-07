@@ -1,6 +1,7 @@
 package languagespec
 
 import (
+	"fmt"
 	"sort"
 	"strconv"
 	"strings"
@@ -374,10 +375,7 @@ func (d *dfa) setInputSymbols(inputSymbols []*inputSymbol) {
 	d.inputSymbols = ism
 }
 
-func newDFA(regexp string) *dfa {
-	lastNotInputSymbol = -555
-	inputSymbolCacheMap = make(map[rune]*inputSymbol)
-	nfaObj := newNFA(regexp)
+func nfa2dfa(nfaObj *nfa) *dfa {
 	dfaObj := &dfa{
 		states:          make([]int, 0),
 		acceptStates:    make([]int, 0),
@@ -477,6 +475,13 @@ func newDFA(regexp string) *dfa {
 	dfaObj.acceptStates = endStates
 
 	return dfaObj
+}
+
+func newDFA(regexp string) *dfa {
+	lastNotInputSymbol = -555
+	inputSymbolCacheMap = make(map[rune]*inputSymbol)
+	nfaObj := newNFA(regexp)
+	return nfa2dfa(nfaObj)
 }
 
 func (d *dfa) Match(str string) bool {
@@ -849,4 +854,89 @@ func getKeys(m map[int]bool) []int {
 		keys = append(keys, k)
 	}
 	return keys
+}
+
+func ConnectNFA(nfaList []*nfa) *dfa {
+	newFinalNFAObj := &nfa{
+		states:              make([]int, 0),
+		inputSymbols:        make([]*inputSymbol, 0),
+		transitionMap:       make(map[int]map[*inputSymbol][]int),
+		acceptStates:        make([]int, 0),
+		beginEndStatePairs:  make(map[int]int),
+		inputSymbolAddedMap: make(map[*inputSymbol]bool),
+	}
+
+	newStates := make([]int, 0)
+	lastStateId := 0
+	oldStateToNewStateMap := make(map[string]int)
+	newInputSymbols := make([]*inputSymbol, 0)
+
+	for i, nfaObj := range nfaList {
+		for _, stateId := range nfaObj.states {
+			newStates = append(newStates, lastStateId)
+			oldStateIdWithIdxStr := tokey(i, stateId)
+			oldStateToNewStateMap[oldStateIdWithIdxStr] = lastStateId
+			lastStateId += 1
+		}
+
+		newInputSymbols = append(newInputSymbols, nfaObj.inputSymbols...)
+	}
+	newFinalNFAObj.states = newStates
+
+	oldStateId := nfaList[0].startState
+	oldStateIdStr := tokey(0, oldStateId)
+	newFinalNFAObj.startState = oldStateToNewStateMap[oldStateIdStr]
+
+	oldFinalStates := nfaList[len(nfaList)-1].acceptStates
+	newFinalStates := make([]int, 0)
+	for _, oldStateId := range oldFinalStates {
+		oldStateIdStr := tokey(len(nfaList)-1, oldStateId)
+		newStateId := oldStateToNewStateMap[oldStateIdStr]
+		newFinalStates = append(newFinalStates, newStateId)
+	}
+	newFinalNFAObj.acceptStates = newFinalStates
+
+	newFinalNFAObj.inputSymbols = newInputSymbols
+
+	for i, nfaObj := range nfaList {
+		for fromStateId, paths := range nfaObj.transitionMap {
+			for ips, toStateList := range paths {
+				for _, toState := range toStateList {
+					fromStateIdStr := tokey(i, fromStateId)
+					toStateIdStr := tokey(i, toState)
+
+					newFromStateId := oldStateToNewStateMap[fromStateIdStr]
+					newToStateId := oldStateToNewStateMap[toStateIdStr]
+
+					newFinalNFAObj.addTransition(ips, newFromStateId, newToStateId)
+				}
+			}
+		}
+	}
+
+	for i := 0; i <= len(nfaList)-2; i++ {
+		epsilonStartNfa := nfaList[i]
+		epsilonEndNfa := nfaList[i+1]
+
+		startNfaEndStates := epsilonStartNfa.acceptStates
+		endNfaStartState := epsilonEndNfa.startState
+		oldEndStateIdStr := tokey(i+1, endNfaStartState)
+
+		for _, beginState := range startNfaEndStates {
+			oldBeginStateIdStr := tokey(i, beginState)
+
+			oldBeginStateId := oldStateToNewStateMap[oldBeginStateIdStr]
+			oldEndStateId := oldStateToNewStateMap[oldEndStateIdStr]
+
+			newFinalNFAObj.addTransition(newEpsilonInputSymbol(), oldBeginStateId, oldEndStateId)
+		}
+	}
+
+	return nfa2dfa(newFinalNFAObj)
+}
+
+func tokey(idx int, stateId int) string {
+	idxStr := fmt.Sprint(idx)
+	stateIdStr := fmt.Sprint(stateId)
+	return idxStr + stateIdStr
 }

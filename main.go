@@ -2,19 +2,36 @@ package main
 
 import (
 	"fmt"
-	"jpg/repl"
-	"os"
-	"os/user"
+	"jpg/languagespec"
+	"jpg/lexer"
+	"jpg/reader"
 )
 
 func main() {
-	u, err := user.Current()
+	fmt.Println(languagespec.CheckIsString(`"fuck"`))
+	filePath := "/Users/smallhai/learn/gitRepo/jpg/test.js"
+	r := reader.New(reader.FileMode, filePath)
+	l := lexer.New(r)
 
-	if err != nil {
-		panic(err)
-	}
+	fmt.Println(l.NextToken())
+	fmt.Println(l.NextToken())
+	fmt.Println(l.NextToken())
+	fmt.Println(l.NextToken())
+	// fmt.Println(l.NextToken())
+	// fmt.Println(l.NextToken())
+	// fmt.Println(l.NextToken())
+	// fmt.Println(l.NextToken())
+	// for tok := l.NextToken(); !tok.IsEof(); {
+	// 	fmt.Println(tok)
+	// }
 
-	fmt.Printf("Hello %s, Try this!\n", u.Username)
+	// u, err := user.Current()
 
-	repl.Start(os.Stdin, os.Stdout)
+	// if err != nil {
+	// 	panic(err)
+	// }
+
+	// fmt.Printf("Hello %s, Try this!\n", u.Username)
+
+	// repl.Start(os.Stdin, os.Stdout)
 }
