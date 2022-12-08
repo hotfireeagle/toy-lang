@@ -2,6 +2,7 @@ package languagespec
 
 import (
 	"fmt"
+	"jpg/constant"
 	"sort"
 	"strconv"
 	"strings"
@@ -657,11 +658,15 @@ func (d *dfa) Match(str string) bool {
 			return character == '/'
 		} else if d.checkIsNotSymbol(ips.symbolLiteral) {
 			notStr := ips.notSymbolLiteralString
+			notWordStrArr := strings.Split(notStr, ",")
 
 			hit := false
 
-			for _, r := range notStr {
-				if r == character {
+			for _, r := range notWordStrArr {
+				if r == "/enter" && character == constant.Enter {
+					hit = true
+					break
+				} else if r == string(character) {
 					hit = true
 					break
 				}

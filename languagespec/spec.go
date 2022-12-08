@@ -64,7 +64,7 @@ const re_while = "($whitespace$)*while($whitespace$)*"
 const re_do = "($whitespace$)*do($whitespace$)*"
 
 // 单行注释
-const re_single_row_comment = "($whitespace$)*//($any$)*($whitespace$)*"
+const re_single_row_comment = `($whitespace$)*//($not$(/enter))*($whitespace$)*`
 
 // [
 const re_left_bracket = "($whitespace$)*/[($whitespace$)*"
@@ -384,34 +384,4 @@ var InstanceofDFA = newDFA(re_instanceof)
 var TypeofDFA = newDFA(re_typeof)
 var VoidDFA = newDFA(re_void)
 var DeleteDFA = newDFA(re_delete)
-
-func CheckIsNormalNum(str string) bool {
-	numREs := []string{
-		re_num_10,
-		re_num_binary2,
-		re_num_16,
-	}
-	numRE := combineSpecsRegularLanguage(numREs)
-	dfaobj := newDFA(numRE)
-	return dfaobj.Match(str)
-}
-
-func CheckIsIdentfier(str string) bool {
-	identfierDFA := newDFA(re_identfier)
-	return identfierDFA.Match(str)
-}
-
-func CheckIsString(str string) bool {
-	// stringRES := []string{
-	// 	re_double_string,
-	// 	re_single_string,
-	// }
-	// stringRE := combineSpecsRegularLanguage(stringRES)
-	stringDFA := newDFA(re_double_string)
-	return stringDFA.Match(str)
-}
-
-func CheckIsComment(str string) bool {
-	commentDFA := newDFA(re_single_row_comment)
-	return commentDFA.Match(str)
-}
+var SingleRowComment = newDFA(re_single_row_comment)

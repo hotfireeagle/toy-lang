@@ -78,6 +78,7 @@ const (
 	VOID       // void
 	DELETE     // delete
 	UNDEFINED
+	COMMENT
 )
 
 var tokenTypeLiteral map[TokenType]string = map[TokenType]string{
@@ -156,6 +157,7 @@ var tokenTypeLiteral map[TokenType]string = map[TokenType]string{
 	VOID:           "void",
 	DELETE:         "delete",
 	UNDEFINED:      "undefined",
+	COMMENT:        "commnet",
 }
 
 var keyWord map[TokenType]bool = map[TokenType]bool{

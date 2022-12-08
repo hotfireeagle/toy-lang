@@ -372,6 +372,8 @@ func (l *Lexer) checkIsFixedType(str string) (tokentype.TokenType, bool) {
 		hitType = tokentype.VOID
 	} else if languagespec.DeleteDFA.Match(str) {
 		hitType = tokentype.DELETE
+	} else if languagespec.SingleRowComment.Match(str) {
+		hitType = tokentype.COMMENT
 	} else if languagespec.IdentfierDFA.Match(str) {
 		hitType = tokentype.IDENTIFIER
 	}
