@@ -24,6 +24,8 @@ const (
 	ARROW          // =>
 	ELLIPSIS       // ...
 	BACKQUOTE      // `
+	GREATER        // >
+	LESS           // <
 	EQ             // =
 	EQUALITY       // ==
 	ASSIGN         // _=
@@ -100,6 +102,8 @@ var tokenTypeLiteral map[TokenType]string = map[TokenType]string{
 	ARROW:          "=>",
 	ELLIPSIS:       "...",
 	BACKQUOTE:      "`",
+	GREATER:        ">",
+	LESS:           "<",
 	EQ:             "=",
 	EQUALITY:       "==",
 	ASSIGN:         "_=",

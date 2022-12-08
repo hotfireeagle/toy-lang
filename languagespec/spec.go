@@ -111,6 +111,12 @@ const re_ellipsis = "($whitespace$)*...($whitespace$)*"
 // =
 const re_equal = "($whitespace$)*=($whitespace$)*"
 
+// >
+const re_greater = "($whitespace$)*>($whitespace$)*"
+
+// <
+const re_less = "($whitespace$)*<($whitespace$)*"
+
 // ==
 const re_equality = "($whitespace$)*==($whitespace$)*"
 
@@ -340,6 +346,8 @@ var QuestionDotDFA = newDFA(re_question_dot)
 var ArrowDFA = newDFA(re_arrow)
 var EllipsisDFA = newDFA(re_ellipsis)
 var EqualDFA = newDFA(re_equal)
+var GreaterDFA = newDFA(re_greater)
+var LessDFA = newDFA(re_less)
 var EqualityDFA = newDFA(re_equality)
 var BitwiseorDFA = newDFA(re_bitwiseor)
 var BitwisexorDFA = newDFA(re_bitwisexor)

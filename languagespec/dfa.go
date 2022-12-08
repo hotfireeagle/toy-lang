@@ -29,11 +29,6 @@ const leftBracketInputSymbol rune = -19
 const rightBracketInputSymbol rune = -20
 const forShitInputSymbol rune = -21
 
-var lastNotInputSymbol rune = -555
-
-var notInputSymbolMap map[rune]bool
-var notInputSymbol2IgnoreAlphabet map[rune]string
-
 const starOperatorSymbolRE rune = '*'
 const zeroOrOneOperatorSymbolRE rune = '?'
 const oneOrMoreOperatorSymbolRE rune = '+'
@@ -116,36 +111,42 @@ func newNotInputSymbol(symbol rune, str string) *inputSymbol {
 	}
 }
 
-func checkIsNotSymbol(symbol rune) bool {
-	return notInputSymbolMap[symbol]
-}
-
 func checkIsEpsilonInputSymbol(ips *inputSymbol) bool {
 	return ips.symbolLiteral == epslilonInputSymbol
 }
 
 type nfa struct {
-	states              []int
-	inputSymbols        []*inputSymbol
-	transitionMap       map[int]map[*inputSymbol][]int
-	startState          int
-	acceptStates        []int
-	beginEndStatePairs  map[int]int
-	iDCount             int
-	inputSymbolAddedMap map[*inputSymbol]bool
+	states                        []int
+	inputSymbols                  []*inputSymbol
+	transitionMap                 map[int]map[*inputSymbol][]int
+	startState                    int
+	acceptStates                  []int
+	beginEndStatePairs            map[int]int
+	iDCount                       int
+	inputSymbolAddedMap           map[*inputSymbol]bool
+	lastNotInputSymbol            rune
+	notInputSymbolMap             map[rune]bool
+	notInputSymbol2IgnoreAlphabet map[rune]string
+}
+
+func (n *nfa) checkIsNotSymbol(symbol rune) bool {
+	return n.notInputSymbolMap[symbol]
 }
 
 func newNFA(infixStr string) *nfa {
 	nfaObj := &nfa{
-		states:              make([]int, 0),
-		inputSymbols:        make([]*inputSymbol, 0),
-		transitionMap:       make(map[int]map[*inputSymbol][]int),
-		acceptStates:        make([]int, 0),
-		beginEndStatePairs:  make(map[int]int),
-		inputSymbolAddedMap: make(map[*inputSymbol]bool),
+		states:                        make([]int, 0),
+		inputSymbols:                  make([]*inputSymbol, 0),
+		transitionMap:                 make(map[int]map[*inputSymbol][]int),
+		acceptStates:                  make([]int, 0),
+		beginEndStatePairs:            make(map[int]int),
+		inputSymbolAddedMap:           make(map[*inputSymbol]bool),
+		lastNotInputSymbol:            -555,
+		notInputSymbolMap:             make(map[rune]bool),
+		notInputSymbol2IgnoreAlphabet: make(map[rune]string),
 	}
 
-	infixStrAfterPreProcess := preProcessForSugar(infixStr)
+	infixStrAfterPreProcess := nfaObj.preProcessForSugar(infixStr)
 
 	postfixRunes := infix2postfix(infixStrAfterPreProcess)
 	nfaObj.postfix2NFA(postfixRunes)
@@ -194,6 +195,140 @@ func (n *nfa) setStartState(stateId int) {
 
 func (n *nfa) addAcceptState(stateId int) {
 	n.acceptStates = append(n.acceptStates, stateId)
+}
+
+func (n *nfa) preProcessForSugar(str string) []rune {
+	needJumpIdxMap := make(map[int]bool)
+	answer := make([]rune, 0)
+
+	setNeedJumpIdx := func(begin int, end int) {
+		for i := begin; i <= end; i++ {
+			needJumpIdxMap[i] = true
+		}
+	}
+
+	strLen := len(str)
+
+	for idx, literal := range str {
+		if needJumpIdxMap[idx] {
+			continue
+		}
+
+		if literal == '/' && idx+starInputSymbolRELen <= strLen && str[idx:idx+starInputSymbolRELen] == starInputSymbolRE {
+			setNeedJumpIdx(idx, idx+starInputSymbolRELen-1)
+			answer = append(answer, starInputSymbol)
+		} else if literal == '/' && idx+questionInputSymbolRELen <= strLen && str[idx:idx+questionInputSymbolRELen] == questionInputSymbolRE {
+			setNeedJumpIdx(idx, idx+questionInputSymbolRELen-1)
+			answer = append(answer, questionInputSymbol)
+		} else if literal == '/' && idx+plusInputSymbolRELen <= strLen && str[idx:idx+plusInputSymbolRELen] == plusInputSymbolRE {
+			setNeedJumpIdx(idx, idx+plusInputSymbolRELen-1)
+			answer = append(answer, plusInputSymbol)
+		} else if literal == '/' && idx+bitOrInputSymbolRELen <= strLen && str[idx:idx+bitOrInputSymbolRELen] == bitOrInputSymbolRE {
+			setNeedJumpIdx(idx, idx+bitOrInputSymbolRELen-1)
+			answer = append(answer, bitOrInputSymbol)
+		} else if literal == '/' && idx+leftParenlInputSymbolRELen <= strLen && str[idx:idx+leftParenlInputSymbolRELen] == leftParenlInputSymbolRE {
+			setNeedJumpIdx(idx, idx+leftParenlInputSymbolRELen-1)
+			answer = append(answer, leftParenlInputSymbol)
+		} else if literal == '/' && idx+rightParenlInputSymbolRELen <= strLen && str[idx:idx+rightParenlInputSymbolRELen] == rightParenlInputSymbolRE {
+			setNeedJumpIdx(idx, idx+rightParenlInputSymbolRELen-1)
+			answer = append(answer, rightParenlInputSymbol)
+		} else if literal == '/' && idx+leftBracketInputSymbolRELen <= strLen && str[idx:idx+leftBracketInputSymbolRELen] == leftBracketInputSymbolRE {
+			setNeedJumpIdx(idx, idx+leftBracketInputSymbolRELen-1)
+			answer = append(answer, leftBracketInputSymbol)
+		} else if literal == '/' && idx+rightBracketInputSymbolRELen <= strLen && str[idx:idx+rightBracketInputSymbolRELen] == rightBracketInputSymbolRE {
+			setNeedJumpIdx(idx, idx+rightBracketInputSymbolRELen-1)
+			answer = append(answer, rightBracketInputSymbol)
+		} else if literal == '/' && idx+forShitInputSymbolRELen <= strLen && str[idx:idx+forShitInputSymbolRELen] == forShitInputSymbolRE {
+			setNeedJumpIdx(idx, idx+forShitInputSymbolRELen-1)
+			answer = append(answer, forShitInputSymbol)
+		} else if literal == starOperatorSymbolRE {
+			answer = append(answer, starOperator)
+		} else if literal == zeroOrOneOperatorSymbolRE {
+			answer = append(answer, zeroOrOneOperator)
+		} else if literal == oneOrMoreOperatorSymbolRE {
+			answer = append(answer, oneOrMoreOperator)
+		} else if literal == unionOperatorSymbolRE {
+			answer = append(answer, unionOperator)
+		} else if literal == leftBracketOperatorSymbolRE {
+			answer = append(answer, leftBracketOperator)
+		} else if literal == rightBracketOperatorSymbolRE {
+			answer = append(answer, rightBracketOperator)
+		} else if literal == '[' {
+			if str[idx+2] == '-' && str[idx+4] == ']' {
+				beginValIdx := idx + 1
+				endValIdx := idx + 3
+				rightBracketIdx := idx + 4
+
+				beginLiteral := str[beginValIdx]
+				endLiteral := str[endValIdx]
+
+				isValid := false
+				convertResult := make([]rune, 0)
+
+				if (beginLiteral <= '9' && endLiteral <= '9' && beginLiteral <= endLiteral) || (isAlphabet(beginLiteral) && isAlphabet(endLiteral) && beginLiteral <= endLiteral) {
+					isValid = true
+
+					k := beginLiteral
+
+					for k <= endLiteral {
+						convertResult = append(convertResult, rune(k))
+						if k != endLiteral {
+							convertResult = append(convertResult, unionOperator)
+						}
+						k++
+					}
+				}
+
+				if isValid {
+					setNeedJumpIdx(beginValIdx, rightBracketIdx)
+
+					answer = append(answer, leftBracketOperator)
+					answer = append(answer, convertResult...)
+					answer = append(answer, rightBracketOperator)
+				} else {
+					answer = append(answer, literal)
+				}
+			} else {
+				answer = append(answer, literal)
+			}
+		} else if literal == '$' {
+			if idx+anySymbolRELen <= strLen && str[idx:idx+anySymbolRELen] == anySymbolRE {
+				setNeedJumpIdx(idx, idx+anySymbolRELen-1)
+				answer = append(answer, anyInputSymbol)
+			} else if idx+alphabetSymbolRELen <= strLen && str[idx:idx+alphabetSymbolRELen] == alphabetSymbolRE {
+				setNeedJumpIdx(idx, idx+alphabetSymbolRELen-1)
+				answer = append(answer, alphabetInputSymbol)
+			} else if idx+whiteSpaceSymbolRELen <= strLen && str[idx:idx+whiteSpaceSymbolRELen] == whiteSpaceSymbolRE {
+				setNeedJumpIdx(idx, idx+whiteSpaceSymbolRELen-1)
+				answer = append(answer, whiteSpaceInputSymbol)
+			} else if idx+enterSpaceSymbolRELen <= strLen && str[idx:idx+enterSpaceSymbolRELen] == enterSpaceSymbolRE {
+				setNeedJumpIdx(idx, idx+enterSpaceSymbolRELen-1)
+				answer = append(answer, enterInputSymbol)
+			} else if idx+notSymbolRELen <= strLen && str[idx:idx+notSymbolRELen] == notSymbolRE {
+				// we trust the builder self, so ignore the check process
+				leftBracketIdx := idx + notSymbolRELen
+				rightBracketIdx := leftBracketIdx
+
+				for str[rightBracketIdx] != rightBracketOperatorSymbolRE {
+					rightBracketIdx++
+				}
+
+				ignoreAlphabetStr := str[leftBracketIdx+1 : rightBracketIdx]
+
+				setNeedJumpIdx(idx, rightBracketIdx)
+				answer = append(answer, n.lastNotInputSymbol)
+				n.notInputSymbolMap[n.lastNotInputSymbol] = true
+				n.notInputSymbol2IgnoreAlphabet[n.lastNotInputSymbol] = ignoreAlphabetStr
+				n.lastNotInputSymbol--
+			} else {
+				answer = append(answer, literal)
+			}
+		} else {
+			answer = append(answer, literal)
+		}
+	}
+
+	return answer
 }
 
 func (n *nfa) postfix2NFA(runes []rune) {
@@ -278,8 +413,8 @@ func (n *nfa) postfix2NFA(runes []rune) {
 			stateStack.in(beginStateId)
 
 			var inp *inputSymbol
-			if checkIsNotSymbol(symbol) {
-				inp = newNotInputSymbol(symbol, notInputSymbol2IgnoreAlphabet[symbol])
+			if n.checkIsNotSymbol(symbol) {
+				inp = newNotInputSymbol(symbol, n.notInputSymbol2IgnoreAlphabet[symbol])
 			} else {
 				inp = newInputSymbol(symbol, "")
 			}
@@ -294,14 +429,15 @@ func (n *nfa) postfix2NFA(runes []rune) {
 }
 
 type dfa struct {
-	states          []int
-	inputSymbols    []*inputSymbol
-	transitionMap   map[int]map[*inputSymbol]int
-	startState      int
-	acceptStates    []int
-	stateIdToSetMap map[string]int
-	deadStateId     int
-	dfaStateCount   int
+	states            []int
+	inputSymbols      []*inputSymbol
+	transitionMap     map[int]map[*inputSymbol]int
+	startState        int
+	acceptStates      []int
+	stateIdToSetMap   map[string]int
+	deadStateId       int
+	dfaStateCount     int
+	notInputSymbolMap map[rune]bool
 }
 
 func (d *dfa) addTransition(ips *inputSymbol, fromStateId int, toStateId int) {
@@ -385,6 +521,7 @@ func nfa2dfa(nfaObj *nfa) *dfa {
 		deadStateId:     -1,
 	}
 
+	dfaObj.notInputSymbolMap = nfaObj.notInputSymbolMap
 	dfaObj.setInputSymbols(nfaObj.inputSymbols)
 
 	var findCurrentStateCanGoAnyStateByEpsilon = func(state int) []int {
@@ -478,10 +615,13 @@ func nfa2dfa(nfaObj *nfa) *dfa {
 }
 
 func newDFA(regexp string) *dfa {
-	lastNotInputSymbol = -555
 	inputSymbolCacheMap = make(map[rune]*inputSymbol)
 	nfaObj := newNFA(regexp)
 	return nfa2dfa(nfaObj)
+}
+
+func (d *dfa) checkIsNotSymbol(symbol rune) bool {
+	return d.notInputSymbolMap[symbol]
 }
 
 func (d *dfa) Match(str string) bool {
@@ -515,7 +655,7 @@ func (d *dfa) Match(str string) bool {
 			return character == ']'
 		} else if ips.symbolLiteral == forShitInputSymbol {
 			return character == '/'
-		} else if checkIsNotSymbol(ips.symbolLiteral) {
+		} else if d.checkIsNotSymbol(ips.symbolLiteral) {
 			notStr := ips.notSymbolLiteralString
 
 			hit := false
@@ -644,142 +784,6 @@ func infix2postfix(infix []rune) []rune {
 	return postfixResult
 }
 
-func preProcessForSugar(str string) []rune {
-	notInputSymbolMap = make(map[rune]bool)
-	notInputSymbol2IgnoreAlphabet = make(map[rune]string)
-	needJumpIdxMap := make(map[int]bool)
-	answer := make([]rune, 0)
-
-	setNeedJumpIdx := func(begin int, end int) {
-		for i := begin; i <= end; i++ {
-			needJumpIdxMap[i] = true
-		}
-	}
-
-	strLen := len(str)
-
-	for idx, literal := range str {
-		if needJumpIdxMap[idx] {
-			continue
-		}
-
-		if literal == '/' && idx+starInputSymbolRELen <= strLen && str[idx:idx+starInputSymbolRELen] == starInputSymbolRE {
-			setNeedJumpIdx(idx, idx+starInputSymbolRELen-1)
-			answer = append(answer, starInputSymbol)
-		} else if literal == '/' && idx+questionInputSymbolRELen <= strLen && str[idx:idx+questionInputSymbolRELen] == questionInputSymbolRE {
-			setNeedJumpIdx(idx, idx+questionInputSymbolRELen-1)
-			answer = append(answer, questionInputSymbol)
-		} else if literal == '/' && idx+plusInputSymbolRELen <= strLen && str[idx:idx+plusInputSymbolRELen] == plusInputSymbolRE {
-			setNeedJumpIdx(idx, idx+plusInputSymbolRELen-1)
-			answer = append(answer, plusInputSymbol)
-		} else if literal == '/' && idx+bitOrInputSymbolRELen <= strLen && str[idx:idx+bitOrInputSymbolRELen] == bitOrInputSymbolRE {
-			setNeedJumpIdx(idx, idx+bitOrInputSymbolRELen-1)
-			answer = append(answer, bitOrInputSymbol)
-		} else if literal == '/' && idx+leftParenlInputSymbolRELen <= strLen && str[idx:idx+leftParenlInputSymbolRELen] == leftParenlInputSymbolRE {
-			setNeedJumpIdx(idx, idx+leftParenlInputSymbolRELen-1)
-			answer = append(answer, leftParenlInputSymbol)
-		} else if literal == '/' && idx+rightParenlInputSymbolRELen <= strLen && str[idx:idx+rightParenlInputSymbolRELen] == rightParenlInputSymbolRE {
-			setNeedJumpIdx(idx, idx+rightParenlInputSymbolRELen-1)
-			answer = append(answer, rightParenlInputSymbol)
-		} else if literal == '/' && idx+leftBracketInputSymbolRELen <= strLen && str[idx:idx+leftBracketInputSymbolRELen] == leftBracketInputSymbolRE {
-			setNeedJumpIdx(idx, idx+leftBracketInputSymbolRELen-1)
-			answer = append(answer, leftBracketInputSymbol)
-		} else if literal == '/' && idx+rightBracketInputSymbolRELen <= strLen && str[idx:idx+rightBracketInputSymbolRELen] == rightBracketInputSymbolRE {
-			setNeedJumpIdx(idx, idx+rightBracketInputSymbolRELen-1)
-			answer = append(answer, rightBracketInputSymbol)
-		} else if literal == '/' && idx+forShitInputSymbolRELen <= strLen && str[idx:idx+forShitInputSymbolRELen] == forShitInputSymbolRE {
-			setNeedJumpIdx(idx, idx+forShitInputSymbolRELen-1)
-			answer = append(answer, forShitInputSymbol)
-		} else if literal == starOperatorSymbolRE {
-			answer = append(answer, starOperator)
-		} else if literal == zeroOrOneOperatorSymbolRE {
-			answer = append(answer, zeroOrOneOperator)
-		} else if literal == oneOrMoreOperatorSymbolRE {
-			answer = append(answer, oneOrMoreOperator)
-		} else if literal == unionOperatorSymbolRE {
-			answer = append(answer, unionOperator)
-		} else if literal == leftBracketOperatorSymbolRE {
-			answer = append(answer, leftBracketOperator)
-		} else if literal == rightBracketOperatorSymbolRE {
-			answer = append(answer, rightBracketOperator)
-		} else if literal == '[' {
-			if str[idx+2] == '-' && str[idx+4] == ']' {
-				beginValIdx := idx + 1
-				endValIdx := idx + 3
-				rightBracketIdx := idx + 4
-
-				beginLiteral := str[beginValIdx]
-				endLiteral := str[endValIdx]
-
-				isValid := false
-				convertResult := make([]rune, 0)
-
-				if (beginLiteral <= '9' && endLiteral <= '9' && beginLiteral <= endLiteral) || (isAlphabet(beginLiteral) && isAlphabet(endLiteral) && beginLiteral <= endLiteral) {
-					isValid = true
-
-					k := beginLiteral
-
-					for k <= endLiteral {
-						convertResult = append(convertResult, rune(k))
-						if k != endLiteral {
-							convertResult = append(convertResult, unionOperator)
-						}
-						k++
-					}
-				}
-
-				if isValid {
-					setNeedJumpIdx(beginValIdx, rightBracketIdx)
-
-					answer = append(answer, leftBracketOperator)
-					answer = append(answer, convertResult...)
-					answer = append(answer, rightBracketOperator)
-				} else {
-					answer = append(answer, literal)
-				}
-			} else {
-				answer = append(answer, literal)
-			}
-		} else if literal == '$' {
-			if idx+anySymbolRELen <= strLen && str[idx:idx+anySymbolRELen] == anySymbolRE {
-				setNeedJumpIdx(idx, idx+anySymbolRELen-1)
-				answer = append(answer, anyInputSymbol)
-			} else if idx+alphabetSymbolRELen <= strLen && str[idx:idx+alphabetSymbolRELen] == alphabetSymbolRE {
-				setNeedJumpIdx(idx, idx+alphabetSymbolRELen-1)
-				answer = append(answer, alphabetInputSymbol)
-			} else if idx+whiteSpaceSymbolRELen <= strLen && str[idx:idx+whiteSpaceSymbolRELen] == whiteSpaceSymbolRE {
-				setNeedJumpIdx(idx, idx+whiteSpaceSymbolRELen-1)
-				answer = append(answer, whiteSpaceInputSymbol)
-			} else if idx+enterSpaceSymbolRELen <= strLen && str[idx:idx+enterSpaceSymbolRELen] == enterSpaceSymbolRE {
-				setNeedJumpIdx(idx, idx+enterSpaceSymbolRELen-1)
-				answer = append(answer, enterInputSymbol)
-			} else if idx+notSymbolRELen <= strLen && str[idx:idx+notSymbolRELen] == notSymbolRE {
-				// we trust the builder self, so ignore the check process
-				leftBracketIdx := idx + notSymbolRELen
-				rightBracketIdx := leftBracketIdx
-
-				for str[rightBracketIdx] != rightBracketOperatorSymbolRE {
-					rightBracketIdx++
-				}
-
-				ignoreAlphabetStr := str[leftBracketIdx+1 : rightBracketIdx]
-
-				setNeedJumpIdx(idx, rightBracketIdx)
-				answer = append(answer, lastNotInputSymbol)
-				notInputSymbolMap[lastNotInputSymbol] = true
-				notInputSymbol2IgnoreAlphabet[lastNotInputSymbol] = ignoreAlphabetStr
-				lastNotInputSymbol--
-			} else {
-				answer = append(answer, literal)
-			}
-		} else {
-			answer = append(answer, literal)
-		}
-	}
-
-	return answer
-}
-
 func isAlphabet(a byte) bool {
 	return (a >= 'a' && a <= 'z') || (a >= 'A' && a <= 'Z')
 }
@@ -858,12 +862,15 @@ func getKeys(m map[int]bool) []int {
 
 func ConnectNFA(nfaList []*nfa) *dfa {
 	newFinalNFAObj := &nfa{
-		states:              make([]int, 0),
-		inputSymbols:        make([]*inputSymbol, 0),
-		transitionMap:       make(map[int]map[*inputSymbol][]int),
-		acceptStates:        make([]int, 0),
-		beginEndStatePairs:  make(map[int]int),
-		inputSymbolAddedMap: make(map[*inputSymbol]bool),
+		states:                        make([]int, 0),
+		inputSymbols:                  make([]*inputSymbol, 0),
+		transitionMap:                 make(map[int]map[*inputSymbol][]int),
+		acceptStates:                  make([]int, 0),
+		beginEndStatePairs:            make(map[int]int),
+		inputSymbolAddedMap:           make(map[*inputSymbol]bool),
+		lastNotInputSymbol:            -555,
+		notInputSymbolMap:             make(map[rune]bool),
+		notInputSymbol2IgnoreAlphabet: make(map[rune]string),
 	}
 
 	newStates := make([]int, 0)
