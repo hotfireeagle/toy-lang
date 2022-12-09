@@ -71,6 +71,15 @@ func (l *Lexer) NextToken() *tokentype.Token {
 			str := sb.String()
 
 			nextTokenType, matched := l.checkIsFixedType(str)
+			if nextTokenType == tokentype.DOT {
+				n1, _ := l.reader.PeekNextNRune(1)
+				n2, _ := l.reader.PeekNextNRune(2)
+				if n1 == '.' && n2 == '.' {
+					l.reader.NextRune()
+					l.reader.NextRune()
+					return tokentype.New(tokentype.ELLIPSIS, "...")
+				}
+			}
 
 			if matched {
 				lastMatchTokenType = nextTokenType
@@ -152,8 +161,6 @@ func (l *Lexer) checkIsFixedType(str string) (tokentype.TokenType, bool) {
 		hitType = tokentype.QUESTIONDOT
 	} else if languagespec.ArrowDFA.Match(str) {
 		hitType = tokentype.ARROW
-	} else if languagespec.EllipsisDFA.Match(str) {
-		hitType = tokentype.ELLIPSIS
 	} else if languagespec.EqualDFA.Match(str) {
 		hitType = tokentype.EQ
 	} else if languagespec.GreaterDFA.Match(str) {

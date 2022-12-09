@@ -16,7 +16,7 @@ const re_num_binary2 = "($whitespace$)*0b[0-1]+($whitespace$)*"
 const re_num_16 = "($whitespace$)*0x(0|1|2|3|4|5|6|7|8|9|a|b|c|d|e|f)+($whitespace$)*"
 
 // 浮点数
-const re_num_float = "($whitespace$)*[0-9]*.[0-9]*($whitespace$)*"
+const re_num_float = "($whitespace$)*[0-9]*.[0-9]+($whitespace$)*"
 
 // 变量名
 const re_identfier = "($whitespace$)*($alphabet$|_|$)($alphabet$|_|$|[0-9])*($whitespace$)*"
