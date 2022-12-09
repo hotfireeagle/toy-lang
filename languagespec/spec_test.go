@@ -1595,3 +1595,49 @@ func Test_re_delete(t *testing.T) {
 		}
 	}
 }
+
+func Test_re_not(t *testing.T) {
+	notDFA := newDFA(re_not)
+
+	testCases := []struct {
+		input  string
+		output bool
+	}{
+		{"", false},
+		{"!", true},
+		{"!!", true},
+		{" !  ", true},
+		{"!! !", false},
+		{"  !!!!", true},
+		{"!!!!!!", true},
+	}
+
+	for _, tobj := range testCases {
+		result := notDFA.Match(tobj.input)
+		if result != tobj.output {
+			t.Errorf("Test_re_not got error in %s, expected to be %v, but got %v", tobj.input, tobj.output, result)
+		}
+	}
+}
+
+func Test_re_eq3(t *testing.T) {
+	notDFA := newDFA(re_eq3)
+
+	testCases := []struct {
+		input  string
+		output bool
+	}{
+		{"", false},
+		{"===", true},
+		{"=", false},
+		{" === ", true},
+		{"== =", false},
+	}
+
+	for _, tobj := range testCases {
+		result := notDFA.Match(tobj.input)
+		if result != tobj.output {
+			t.Errorf("Test_re_eq3 got error in %s, expected to be %v, but got %v", tobj.input, tobj.output, result)
+		}
+	}
+}

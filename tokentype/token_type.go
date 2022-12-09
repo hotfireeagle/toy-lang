@@ -2,6 +2,8 @@ package tokentype
 
 type TokenType int
 
+// ...
+
 const (
 	INVALID TokenType = iota
 	NUM
@@ -9,25 +11,27 @@ const (
 	STRING
 	IDENTIFIER
 	EOF
-	BRACKETL       // [
-	BRACKETR       // ]
-	BRACEL         // {
-	BRACER         // }
-	PARENL         // (
-	PARENR         // )
-	COMMA          // ,
-	SEMI           // ;
-	COLON          // :
-	DOT            // .
-	QUESTION       // ?
-	QUESTIONDOT    // ?.
-	ARROW          // =>
-	ELLIPSIS       // ...
-	BACKQUOTE      // `
-	GREATER        // >
-	LESS           // <
-	EQ             // =
-	EQUALITY       // ==
+	BRACKETL // [
+	BRACKETR // ]
+	BRACEL   // {
+	BRACER   // }
+	PARENL   // (
+	PARENR   // )
+	COMMA    // ,
+	SEMI     // ;
+	COLON    // :
+	DOT      // .
+	QUESTION // ?
+	NOT
+	QUESTIONDOT // ?.
+	ARROW       // =>
+	ELLIPSIS    // ...
+	BACKQUOTE   // `
+	GREATER     // >
+	LESS        // <
+	EQ          // =
+	EQUALITY    // ==
+	EQ3
 	ASSIGN         // _=
 	BITWISEOR      // |
 	BITWISEXOR     // ^
@@ -98,6 +102,7 @@ var tokenTypeLiteral map[TokenType]string = map[TokenType]string{
 	SEMI:           ";",
 	COLON:          ":",
 	DOT:            ".",
+	NOT:            "!",
 	QUESTION:       "?",
 	QUESTIONDOT:    "?.",
 	ARROW:          "=>",
@@ -107,6 +112,7 @@ var tokenTypeLiteral map[TokenType]string = map[TokenType]string{
 	LESS:           "<",
 	EQ:             "=",
 	EQUALITY:       "==",
+	EQ3:            "===",
 	ASSIGN:         "_=",
 	BITWISEOR:      "|",
 	BITWISEXOR:     "^",

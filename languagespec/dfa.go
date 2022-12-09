@@ -51,10 +51,6 @@ const leftBracketInputSymbolRE = "/["
 const rightBracketInputSymbolRE = "/]"
 const forShitInputSymbolRE = "//"
 
-const whitespace rune = ' '
-const tab rune = '	'
-const enter rune = 10
-
 const anySymbolRELen = len(anySymbolRE)
 const alphabetSymbolRELen = len(alphabetSymbolRE)
 const notSymbolRELen = len(notSymbolRE)
@@ -635,9 +631,9 @@ func (d *dfa) Match(str string) bool {
 		} else if ips.symbolLiteral == alphabetInputSymbol {
 			return isAlphabet(byte(character))
 		} else if ips.symbolLiteral == whiteSpaceInputSymbol {
-			return character == whitespace || character == tab
+			return character == constant.Whitespace || character == constant.Tab
 		} else if ips.symbolLiteral == enterInputSymbol {
-			return character == enter
+			return character == constant.Enter
 		} else if ips.symbolLiteral == starInputSymbol {
 			return character == '*'
 		} else if ips.symbolLiteral == questionInputSymbol {
