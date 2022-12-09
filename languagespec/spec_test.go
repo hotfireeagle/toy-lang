@@ -77,6 +77,29 @@ func Test_re_num_16(t *testing.T) {
 	}
 }
 
+func Test_re_num_float(t *testing.T) {
+	dfaFloatObj := newDFA(re_num_float)
+
+	testCases := []struct {
+		input  string
+		output bool
+	}{
+		{"121.2", true},
+		{"12", false},
+		{"000.23", true},
+		{"1233.22", true},
+		{"sds.sd", false},
+		{"  212.23330 ", true},
+	}
+
+	for _, to := range testCases {
+		result := dfaFloatObj.Match(to.input)
+		if result != to.output {
+			t.Errorf("Test_re_num_float got error in %s, expected to be %v, but got %v", to.input, to.output, result)
+		}
+	}
+}
+
 func Test_re_identfier(t *testing.T) {
 	dfaObj := newDFA(re_identfier)
 

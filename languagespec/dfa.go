@@ -944,6 +944,8 @@ func ConnectNFA(nfaList []*nfa) *dfa {
 		}
 	}
 
+	// TODO:notSymbolMap的合并
+
 	return nfa2dfa(newFinalNFAObj)
 }
 

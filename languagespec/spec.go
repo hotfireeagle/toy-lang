@@ -15,6 +15,9 @@ const re_num_binary2 = "($whitespace$)*0b[0-1]+($whitespace$)*"
 // 16进制数字
 const re_num_16 = "($whitespace$)*0x(0|1|2|3|4|5|6|7|8|9|a|b|c|d|e|f)+($whitespace$)*"
 
+// 浮点数
+const re_num_float = "($whitespace$)*[0-9]*.[0-9]*($whitespace$)*"
+
 // 变量名
 const re_identfier = "($whitespace$)*($alphabet$|_|$)($alphabet$|_|$|[0-9])*($whitespace$)*"
 
@@ -315,6 +318,7 @@ func combineSpecsRegularLanguage(specs []string) string {
 var Num10DFA = newDFA(re_num_10)
 var NumB2DFA = newDFA(re_num_binary2)
 var Num16DFA = newDFA(re_num_16)
+var FloatDFA = newDFA(re_num_float)
 var IdentfierDFA = newDFA(re_identfier)
 var StringDoubleDFA = newDFA(re_double_string)
 var StringSingleDFA = newDFA(re_single_string)

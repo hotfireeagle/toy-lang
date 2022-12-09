@@ -236,7 +236,7 @@ func (l *Lexer) NextToken() *tokentype.Token {
 func (l *Lexer) checkIsFixedType(str string) (tokentype.TokenType, bool) {
 	var hitType tokentype.TokenType
 
-	if languagespec.Num10DFA.Match(str) || languagespec.NumB2DFA.Match(str) || languagespec.Num16DFA.Match(str) {
+	if languagespec.Num10DFA.Match(str) || languagespec.NumB2DFA.Match(str) || languagespec.Num16DFA.Match(str) || languagespec.FloatDFA.Match(str) {
 		hitType = tokentype.NUM
 	} else if languagespec.StringDoubleDFA.Match(str) || languagespec.StringSingleDFA.Match(str) {
 		hitType = tokentype.STRING
