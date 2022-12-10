@@ -240,6 +240,9 @@ const re_eq3 = "($whitespace$)*===($whitespace$)*"
 // /
 const re_division = "($whitespace$)*//($whitespace$)*"
 
+// *
+const re_multi = "($whitespace$)*/*($whitespace$)*"
+
 func combineSpecsRegularLanguage(specs []string) string {
 	var result strings.Builder
 
@@ -330,3 +333,4 @@ var DeleteDFA = newDFA(re_delete)
 var NotDFA = newDFA(re_not)
 var Eq3DFA = newDFA(re_eq3)
 var DivisionDFA = newDFA(re_division)
+var MultiDFA = newDFA(re_multi)

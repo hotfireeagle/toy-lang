@@ -223,6 +223,8 @@ func (l *Lexer) checkIsFixedType(str string) (tokentype.TokenType, bool) {
 		hitType = tokentype.PLUS
 	} else if languagespec.MinDFA.Match(str) {
 		hitType = tokentype.MIN
+	} else if languagespec.MultiDFA.Match(str) {
+		hitType = tokentype.MULTI
 	} else if languagespec.ModuloDFA.Match(str) {
 		hitType = tokentype.MODULO
 	} else if languagespec.BitleftshiftDFA.Match(str) {

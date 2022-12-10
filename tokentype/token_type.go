@@ -82,6 +82,7 @@ const (
 	UNDEFINED
 	COMMENT
 	DIVISION
+	MULTI
 )
 
 var tokenTypeLiteral map[TokenType]string = map[TokenType]string{
@@ -164,6 +165,7 @@ var tokenTypeLiteral map[TokenType]string = map[TokenType]string{
 	UNDEFINED:      "undefined",
 	COMMENT:        "commnet",
 	DIVISION:       "/",
+	MULTI:          "*",
 }
 
 var keyWord map[TokenType]bool = map[TokenType]bool{
