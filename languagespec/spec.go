@@ -67,7 +67,10 @@ const re_while = "($whitespace$)*while($whitespace$)*"
 const re_do = "($whitespace$)*do($whitespace$)*"
 
 // 单行注释
-const re_single_row_comment = `($whitespace$)*//($not$(/enter))*($whitespace$)*`
+const re_single_row_comment = `($whitespace$)*////($not$(/enter))*($whitespace$)*`
+
+// 多行注释
+const re_multi_row_comment = `($whitespace$)*///*$any$*/*//($whitespace$)*`
 
 // [
 const re_left_bracket = "($whitespace$)*/[($whitespace$)*"
@@ -321,5 +324,6 @@ var TypeofDFA = newDFA(re_typeof)
 var VoidDFA = newDFA(re_void)
 var DeleteDFA = newDFA(re_delete)
 var SingleRowComment = newDFA(re_single_row_comment)
+var MultiRowComment = newDFA(re_multi_row_comment)
 var NotDFA = newDFA(re_not)
 var Eq3DFA = newDFA(re_eq3)

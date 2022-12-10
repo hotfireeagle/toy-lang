@@ -475,6 +475,33 @@ func Test_re_single_row_comment(t *testing.T) {
 	}
 }
 
+func Test_re_multi_row_comment(t *testing.T) {
+	scDFA := newDFA(re_multi_row_comment)
+	cases := []struct {
+		input  string
+		output bool
+	}{
+		{"//sdshjds", false},
+		{" // skksd ", false},
+		{"	// ksdjksds ", false},
+		{`/* sjkds */`, true},
+		{`/* 
+			sjkds */`, true},
+		{`/* 
+			sjkds
+		*/`, true},
+		{`/**
+		 sjkds */`, true},
+	}
+
+	for _, co := range cases {
+		result := scDFA.Match(co.input)
+		if result != co.output {
+			t.Errorf("Test_re_multi_row_comment got err in %s, expected to be %v, but got %v", co.input, co.output, result)
+		}
+	}
+}
+
 func Test_re_left_bracket(t *testing.T) {
 	lbdfa := newDFA(re_left_bracket)
 
