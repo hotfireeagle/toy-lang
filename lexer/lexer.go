@@ -260,6 +260,8 @@ func (l *Lexer) checkIsFixedType(str string) (tokentype.TokenType, bool) {
 		hitType = tokentype.NOT
 	} else if languagespec.Eq3DFA.Match(str) {
 		hitType = tokentype.EQ3
+	} else if languagespec.DivisionDFA.Match(str) {
+		hitType = tokentype.DIVISION
 	} else if languagespec.IdentfierDFA.Match(str) {
 		hitType = tokentype.IDENTIFIER
 	}

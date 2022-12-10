@@ -81,6 +81,7 @@ const (
 	DELETE     // delete
 	UNDEFINED
 	COMMENT
+	DIVISION
 )
 
 var tokenTypeLiteral map[TokenType]string = map[TokenType]string{
@@ -162,6 +163,7 @@ var tokenTypeLiteral map[TokenType]string = map[TokenType]string{
 	DELETE:         "delete",
 	UNDEFINED:      "undefined",
 	COMMENT:        "commnet",
+	DIVISION:       "/",
 }
 
 var keyWord map[TokenType]bool = map[TokenType]bool{
