@@ -34,6 +34,29 @@ func (l *Lexer) NextToken() *tokentype.Token {
 		ru := l.reader.NextRune()
 		nextRu, _ := l.reader.PeekNextNRune(1)
 
+		if len(sb.String()) == 0 && ru == '/' && nextRu != '/' && nextRu != '*' {
+			sb.WriteRune(ru)
+			count := 1
+			ru = l.reader.NextRune()
+			for ru != '/' {
+				if ru == constant.Enter || ru == constant.Tab || ru == constant.Whitespace {
+					break
+				}
+				sb.WriteRune(ru)
+				ru = l.reader.NextRune()
+				count += 1
+			}
+
+			if ru == '/' {
+				sb.WriteRune(ru)
+				return tokentype.New(tokentype.REGEXP, sb.String())
+			} else {
+				for j := 1; j <= count; j++ {
+					l.reader.Backtrack()
+				}
+			}
+		}
+
 		if ru == '/' && nextRu == '/' {
 			for ru != constant.Enter {
 				ru = l.reader.NextRune()
@@ -124,7 +147,7 @@ func (l *Lexer) checkIsFixedType(str string) (tokentype.TokenType, bool) {
 
 	if languagespec.Num10DFA.Match(str) || languagespec.NumB2DFA.Match(str) || languagespec.Num16DFA.Match(str) || languagespec.FloatDFA.Match(str) {
 		hitType = tokentype.NUM
-	} else if languagespec.StringDoubleDFA.Match(str) || languagespec.StringSingleDFA.Match(str) {
+	} else if languagespec.StringDoubleDFA.Match(str) || languagespec.StringSingleDFA.Match(str) || languagespec.TemplateStringDFA.Match(str) {
 		hitType = tokentype.STRING
 	} else if languagespec.VarDFA.Match(str) {
 		hitType = tokentype.VAR

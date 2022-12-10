@@ -4,8 +4,6 @@ import (
 	"strings"
 )
 
-// TODO: 支持模版字符串
-
 // 10进制数字
 const re_num_10 = "($whitespace$)*(0+)|([1-9][0-9]*)($whitespace$)*"
 
@@ -26,6 +24,8 @@ const re_double_string = `($whitespace$)*"($not$("))*"($whitespace$)*`
 
 // 单引号字符串
 const re_single_string = `($whitespace$)*'($not$('))*'($whitespace$)*`
+
+const re_template_string = "($whitespace$)*`$not$(`)*`($whitespace$)*"
 
 // var
 const re_var = "($whitespace$)*var($whitespace$)*"
@@ -237,6 +237,7 @@ const re_not = "($whitespace$)*!+($whitespace$)*"
 // ===
 const re_eq3 = "($whitespace$)*===($whitespace$)*"
 
+// /
 const re_division = "($whitespace$)*//($whitespace$)*"
 
 func combineSpecsRegularLanguage(specs []string) string {
@@ -259,6 +260,7 @@ var FloatDFA = newDFA(re_num_float)
 var IdentfierDFA = newDFA(re_identfier)
 var StringDoubleDFA = newDFA(re_double_string)
 var StringSingleDFA = newDFA(re_single_string)
+var TemplateStringDFA = newDFA(re_template_string)
 var VarDFA = newDFA(re_var)
 var LetDFA = newDFA(re_let)
 var ConstDFA = newDFA(re_const)
