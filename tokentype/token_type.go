@@ -2,8 +2,6 @@ package tokentype
 
 type TokenType int
 
-// ...
-
 const (
 	INVALID TokenType = iota
 	NUM

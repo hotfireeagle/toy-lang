@@ -32,6 +32,23 @@ func (l *Lexer) NextToken() *tokentype.Token {
 
 	greed = func() *tokentype.Token {
 		ru := l.reader.NextRune()
+		nextRu, _ := l.reader.PeekNextNRune(1)
+
+		if ru == '/' && nextRu == '/' {
+			for ru != constant.Enter {
+				ru = l.reader.NextRune()
+			}
+			return l.NextToken()
+		}
+
+		if ru == '/' && nextRu == '*' {
+			for !(ru == '*' && nextRu == '/') {
+				ru = l.reader.NextRune()
+				nextRu, _ = l.reader.PeekNextNRune(1)
+			}
+			l.reader.NextRune()
+			return l.NextToken()
+		}
 
 		if ru == constant.Tab || ru == constant.Whitespace {
 			currentStr := sb.String()
@@ -239,10 +256,6 @@ func (l *Lexer) checkIsFixedType(str string) (tokentype.TokenType, bool) {
 		hitType = tokentype.VOID
 	} else if languagespec.DeleteDFA.Match(str) {
 		hitType = tokentype.DELETE
-	} else if languagespec.SingleRowComment.Match(str) {
-		hitType = tokentype.COMMENT
-	} else if languagespec.MultiRowComment.Match(str) {
-		hitType = tokentype.COMMENT
 	} else if languagespec.NotDFA.Match(str) {
 		hitType = tokentype.NOT
 	} else if languagespec.Eq3DFA.Match(str) {
