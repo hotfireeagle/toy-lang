@@ -83,6 +83,7 @@ const (
 	COMMENT
 	DIVISION
 	MULTI
+	ENTER
 )
 
 var tokenTypeLiteral map[TokenType]string = map[TokenType]string{
@@ -166,6 +167,7 @@ var tokenTypeLiteral map[TokenType]string = map[TokenType]string{
 	COMMENT:        "commnet",
 	DIVISION:       "/",
 	MULTI:          "*",
+	ENTER:          "enter",
 }
 
 var keyWord map[TokenType]bool = map[TokenType]bool{

@@ -87,9 +87,10 @@ func (l *Lexer) NextToken() *tokentype.Token {
 			if hitedType != tokentype.INVALID {
 				return tokentype.New(hitedType, strings.TrimSpace(sb.String()))
 			} else {
-				// TODO: 确定一下这个换行符是否需要抛弃
 				// sb.WriteRune(ru)
-				return greed()
+				// return greed()
+				// return l.NextToken()
+				return tokentype.New(tokentype.ENTER, "")
 			}
 		}
 
