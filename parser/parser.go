@@ -50,6 +50,8 @@ func (p *Parser) parseStatement() ast.Statement {
 	switch p.curToken.Type {
 	case tokentype.LET:
 		return p.parseLetStatement()
+	case tokentype.RETURN:
+		return p.parseReturnStatement()
 	default:
 		return nil
 	}
@@ -77,6 +79,17 @@ func (p *Parser) parseLetStatement() *ast.LetStatement {
 		p.nextToken()
 	}
 
+	return stmt
+}
+
+func (p *Parser) parseReturnStatement() *ast.ReturnStatement {
+	stmt := &ast.ReturnStatement{
+		Token: *p.curToken,
+	}
+	p.nextToken()
+	for !p.curTokenIs(tokentype.SEMI) {
+		p.nextToken()
+	}
 	return stmt
 }
 
