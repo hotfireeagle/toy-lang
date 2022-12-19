@@ -7,18 +7,40 @@ import (
 	"jpg/tokentype"
 )
 
+const (
+	_ int = iota
+	LOWEST
+	EQUALS
+	LESSGRATER
+	SUM
+	PRODUCT
+	PREFIX
+	CALL
+)
+
+type (
+	prefixParseFn func() ast.Expression
+	infixParseFn  func(ast.Expression) ast.Expression
+)
+
 type Parser struct {
-	l         *lexer.Lexer
-	curToken  *tokentype.Token
-	peekToken *tokentype.Token
-	errors    []string
+	l              *lexer.Lexer
+	curToken       *tokentype.Token
+	peekToken      *tokentype.Token
+	errors         []string
+	prefixParseFns map[tokentype.TokenType]prefixParseFn
+	infixParseFns  map[tokentype.TokenType]infixParseFn
 }
 
 func New(l *lexer.Lexer) *Parser {
 	p := &Parser{
-		l:      l,
-		errors: []string{},
+		l:              l,
+		errors:         []string{},
+		prefixParseFns: make(map[tokentype.TokenType]prefixParseFn),
+		infixParseFns:  make(map[tokentype.TokenType]infixParseFn),
 	}
+
+	p.registerPrefix(tokentype.IDENTIFIER, p.parseIdentfier)
 
 	p.nextToken()
 	p.nextToken()
@@ -29,6 +51,21 @@ func New(l *lexer.Lexer) *Parser {
 func (p *Parser) nextToken() {
 	p.curToken = p.peekToken
 	p.peekToken = p.l.NextToken()
+}
+
+func (p *Parser) registerPrefix(tokenType tokentype.TokenType, fn prefixParseFn) {
+	p.prefixParseFns[tokenType] = fn
+}
+
+func (p *Parser) registerInfix(tokenType tokentype.TokenType, fn infixParseFn) {
+	p.infixParseFns[tokenType] = fn
+}
+
+func (p *Parser) parseIdentfier() ast.Expression {
+	return &ast.Identifier{
+		Token: p.curToken,
+		Value: p.curToken.Literal,
+	}
 }
 
 func (p *Parser) ParseProgram() *ast.Program {
@@ -53,7 +90,10 @@ func (p *Parser) parseStatement() ast.Statement {
 	case tokentype.RETURN:
 		return p.parseReturnStatement()
 	default:
-		return nil
+		if p.curToken.IsEnter() {
+			return nil
+		}
+		return p.parseExpressionStatement()
 	}
 }
 
@@ -91,6 +131,26 @@ func (p *Parser) parseReturnStatement() *ast.ReturnStatement {
 		p.nextToken()
 	}
 	return stmt
+}
+
+func (p *Parser) parseExpressionStatement() *ast.ExpressionStatement {
+	stmt := &ast.ExpressionStatement{
+		Token: *p.curToken,
+	}
+	stmt.Expression = p.parseExpression(LOWEST)
+	if p.peekTokenIs(tokentype.SEMI) {
+		p.nextToken()
+	}
+	return stmt
+}
+
+func (p *Parser) parseExpression(precedence int) ast.Expression {
+	prefix := p.prefixParseFns[p.curToken.Type]
+	if prefix == nil {
+		return nil
+	}
+	lextExp := prefix()
+	return lextExp
 }
 
 func (p *Parser) curTokenIs(t tokentype.TokenType) bool {

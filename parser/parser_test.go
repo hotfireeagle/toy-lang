@@ -113,3 +113,36 @@ func TestReturnStatments(t *testing.T) {
 		}
 	}
 }
+
+func TestExpressStatement(t *testing.T) {
+	input := "foobar;"
+
+	r := reader.New(reader.TextMode, input)
+	l := lexer.New(r)
+	p := New(l)
+
+	program := p.ParseProgram()
+	checkParserErrors(t, p)
+
+	if len(program.Statements) != 1 {
+		t.Fatalf("program.Statements does not contain 1 statements, got %d", len(program.Statements))
+	}
+
+	expressionStatement, ok := program.Statements[0].(*ast.ExpressionStatement)
+	if !ok {
+		t.Fatalf("TestExpressStatement should just contain ExpressionStatement, but got %T", expressionStatement)
+	}
+
+	ident, ok := expressionStatement.Expression.(*ast.Identifier)
+	if !ok {
+		t.Fatalf("expression wrong type")
+	}
+
+	if ident.Value != "foobar" {
+		t.Fatalf("wrong value")
+	}
+
+	if ident.TokenLiteral() != "foobar" {
+		t.Fatalf("wrong literal")
+	}
+}
