@@ -5,6 +5,7 @@ import (
 	"jpg/ast"
 	"jpg/lexer"
 	"jpg/tokentype"
+	"strconv"
 )
 
 const (
@@ -41,6 +42,7 @@ func New(l *lexer.Lexer) *Parser {
 	}
 
 	p.registerPrefix(tokentype.IDENTIFIER, p.parseIdentfier)
+	p.registerPrefix(tokentype.NUM, p.parseIntegerLiteral)
 
 	p.nextToken()
 	p.nextToken()
@@ -178,4 +180,20 @@ func (p *Parser) Errors() []string {
 func (p *Parser) peekError(t tokentype.TokenType) {
 	msg := fmt.Sprintf("expected next token to be %v, got %v instead", t, p.peekToken.Type)
 	p.errors = append(p.errors, msg)
+}
+
+func (p *Parser) parseIntegerLiteral() ast.Expression {
+	il := &ast.IntegerLiteral{
+		Token: *p.curToken,
+	}
+
+	val, err := strconv.ParseInt(p.curToken.Literal, 0, 64)
+	if err != nil {
+		msg := fmt.Sprintf("count not parse %q as integer", p.curToken.Literal)
+		p.errors = append(p.errors, msg)
+		return nil
+	}
+
+	il.Value = val
+	return il
 }

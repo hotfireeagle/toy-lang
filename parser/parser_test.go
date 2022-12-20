@@ -4,6 +4,7 @@ import (
 	"jpg/ast"
 	"jpg/lexer"
 	"jpg/reader"
+	"jpg/tokentype"
 	"testing"
 )
 
@@ -144,5 +145,42 @@ func TestExpressStatement(t *testing.T) {
 
 	if ident.TokenLiteral() != "foobar" {
 		t.Fatalf("wrong literal")
+	}
+}
+
+func TestIngeterStatement(t *testing.T) {
+	input := "30;"
+	r := reader.New(reader.TextMode, input)
+	l := lexer.New(r)
+	p := New(l)
+
+	program := p.ParseProgram()
+	checkParserErrors(t, p)
+
+	if len(program.Statements) != 1 {
+		t.Fatalf("program.Statements should be 1, but got %d", len(program.Statements))
+	}
+
+	stmt, ok := program.Statements[0].(*ast.ExpressionStatement)
+	if !ok {
+		t.Fatalf("program.Statements[0]'s Type not ExpressionStatement, got %T", program.Statements[0])
+	}
+
+	testIntegerLiteral(t, stmt.Expression, 30)
+}
+
+// test this expression is intergerLiteral
+func testIntegerLiteral(t *testing.T, il ast.Expression, num int64) {
+	integerExpression, ok := il.(*ast.IntegerLiteral)
+	if !ok {
+		t.Fatalf("integerExpression type should be intergerLiteral, but got %T", integerExpression)
+	}
+
+	if integerExpression.Token.Type != tokentype.NUM {
+		t.Fatalf("interExpression.Token.Type should be num, but got %v", integerExpression.Token.Type)
+	}
+
+	if integerExpression.Value != num {
+		t.Fatalf("interExpression.Value does's match, got %v, expected to be %v", integerExpression.Value, num)
 	}
 }
