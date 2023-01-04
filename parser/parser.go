@@ -43,6 +43,8 @@ func New(l *lexer.Lexer) *Parser {
 
 	p.registerPrefix(tokentype.IDENTIFIER, p.parseIdentfier)
 	p.registerPrefix(tokentype.NUM, p.parseIntegerLiteral)
+	p.registerPrefix(tokentype.NOT, p.parsePrefixExpression)
+	p.registerPrefix(tokentype.MIN, p.parsePrefixExpression)
 
 	p.nextToken()
 	p.nextToken()
@@ -146,9 +148,15 @@ func (p *Parser) parseExpressionStatement() *ast.ExpressionStatement {
 	return stmt
 }
 
+func (p *Parser) noPrefixParseFnError(t *tokentype.Token) {
+	msg := fmt.Sprintf("no prefix parse function for %s found", t.Literal)
+	p.errors = append(p.errors, msg)
+}
+
 func (p *Parser) parseExpression(precedence int) ast.Expression {
 	prefix := p.prefixParseFns[p.curToken.Type]
 	if prefix == nil {
+		p.noPrefixParseFnError(p.curToken)
 		return nil
 	}
 	lextExp := prefix()
@@ -182,6 +190,7 @@ func (p *Parser) peekError(t tokentype.TokenType) {
 	p.errors = append(p.errors, msg)
 }
 
+// TODO: 需要区别浮点数
 func (p *Parser) parseIntegerLiteral() ast.Expression {
 	il := &ast.IntegerLiteral{
 		Token: *p.curToken,
@@ -196,4 +205,17 @@ func (p *Parser) parseIntegerLiteral() ast.Expression {
 
 	il.Value = val
 	return il
+}
+
+func (p *Parser) parsePrefixExpression() ast.Expression {
+	expression := &ast.PrefixExpression{
+		Token:    *p.curToken,
+		Operator: p.curToken.Literal,
+	}
+
+	p.nextToken()
+
+	expression.Right = p.parseExpression(PREFIX)
+
+	return expression
 }
