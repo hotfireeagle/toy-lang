@@ -483,7 +483,7 @@ export const fissionFinishMap = new Map()
   
   // 通过文件名判断是否是否是图片格式
   const checkIsJpg = (fileName) => {
-    const imgmime = ['.png', '.jpg', '.jpeg'];
+    const imgmime = ['.png', '.toy', '.jpeg'];
     return imgmime.some((mime) => {
       return fileName.includes(mime);
     });
@@ -770,7 +770,7 @@ export const fissionFinishMap = new Map()
     if (mime.includes('png')) {
       postfix = '.png';
     } else {
-      postfix = '.jpg';
+      postfix = '.toy';
     }
   
     const randomStr = Math.random().toString(16).substring(2);

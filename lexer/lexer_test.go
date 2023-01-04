@@ -1,8 +1,8 @@
 package lexer
 
 import (
-	"jpg/reader"
 	"testing"
+	"toy/reader"
 )
 
 func TestNextToken(t *testing.T) {

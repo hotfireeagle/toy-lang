@@ -1,7 +1,7 @@
 package reader
 
 import (
-	"jpg/constant"
+	"toy/constant"
 )
 
 type TextReader struct {

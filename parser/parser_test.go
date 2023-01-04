@@ -2,11 +2,11 @@ package parser
 
 import (
 	"fmt"
-	"jpg/ast"
-	"jpg/lexer"
-	"jpg/reader"
-	"jpg/tokentype"
 	"testing"
+	"toy/ast"
+	"toy/lexer"
+	"toy/reader"
+	"toy/tokentype"
 )
 
 func TestLetStatements(t *testing.T) {

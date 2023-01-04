@@ -2,7 +2,7 @@ package ast
 
 import (
 	"bytes"
-	"jpg/tokentype"
+	"toy/tokentype"
 )
 
 type Node interface {

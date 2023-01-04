@@ -1,11 +1,11 @@
 package lexer
 
 import (
-	"jpg/constant"
-	"jpg/languagespec"
-	"jpg/reader"
-	"jpg/tokentype"
 	"strings"
+	"toy/constant"
+	"toy/languagespec"
+	"toy/reader"
+	"toy/tokentype"
 )
 
 type Lexer struct {

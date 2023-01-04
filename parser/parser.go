@@ -2,10 +2,10 @@ package parser
 
 import (
 	"fmt"
-	"jpg/ast"
-	"jpg/lexer"
-	"jpg/tokentype"
 	"strconv"
+	"toy/ast"
+	"toy/lexer"
+	"toy/tokentype"
 )
 
 const (

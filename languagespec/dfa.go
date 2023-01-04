@@ -2,10 +2,10 @@ package languagespec
 
 import (
 	"fmt"
-	"jpg/constant"
 	"sort"
 	"strconv"
 	"strings"
+	"toy/constant"
 )
 
 const starOperator rune = -1

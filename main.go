@@ -2,12 +2,12 @@ package main
 
 import (
 	"fmt"
-	"jpg/lexer"
-	"jpg/reader"
+	"toy/lexer"
+	"toy/reader"
 )
 
 func main() {
-	filePath := "/Users/smallhai/learn/gitRepo/jpg/test.js"
+	filePath := "/Users/smallhai/learn/gitRepo/toy/test.js"
 	r := reader.New(reader.FileMode, filePath)
 	l := lexer.New(r)
 	c := 1

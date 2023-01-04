@@ -1,8 +1,8 @@
 package ast
 
 import (
-	"jpg/tokentype"
 	"testing"
+	"toy/tokentype"
 )
 
 func TestString(t *testing.T) {

@@ -4,8 +4,8 @@ import (
 	"bufio"
 	"errors"
 	"io"
-	"jpg/constant"
 	"os"
+	"toy/constant"
 )
 
 type FileReader struct {

@@ -1,8 +1,8 @@
 package reader
 
 import (
-	"jpg/constant"
 	"testing"
+	"toy/constant"
 )
 
 func TestEmptyInputReader(t *testing.T) {

@@ -4,8 +4,8 @@ import (
 	"bufio"
 	"fmt"
 	"io"
-	"jpg/lexer"
-	"jpg/reader"
+	"toy/lexer"
+	"toy/reader"
 )
 
 const PROMPT = ">> "
