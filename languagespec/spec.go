@@ -243,6 +243,12 @@ const re_division = "($whitespace$)*//($whitespace$)*"
 // *
 const re_multi = "($whitespace$)*/*($whitespace$)*"
 
+// !=
+const re_not_eq = "($whitespace$)*!=($whitespace$)*"
+
+// !==
+const re_not_eq3 = "($whitespace$)*!==($whitespace$)*"
+
 func combineSpecsRegularLanguage(specs []string) string {
 	var result strings.Builder
 
@@ -334,3 +340,5 @@ var NotDFA = newDFA(re_not)
 var Eq3DFA = newDFA(re_eq3)
 var DivisionDFA = newDFA(re_division)
 var MultiDFA = newDFA(re_multi)
+var NotEQDFA = newDFA(re_not_eq)
+var NotEQ3DFA = newDFA(re_not_eq3)

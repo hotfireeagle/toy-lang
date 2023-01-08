@@ -282,6 +282,10 @@ func (l *Lexer) checkIsFixedType(str string) (tokentype.TokenType, bool) {
 		hitType = tokentype.VOID
 	} else if languagespec.DeleteDFA.Match(str) {
 		hitType = tokentype.DELETE
+	} else if languagespec.NotEQ3DFA.Match(str) {
+		hitType = tokentype.NOT_EQ3
+	} else if languagespec.NotEQDFA.Match(str) {
+		hitType = tokentype.NOT_EQ
 	} else if languagespec.NotDFA.Match(str) {
 		hitType = tokentype.NOT
 	} else if languagespec.Eq3DFA.Match(str) {

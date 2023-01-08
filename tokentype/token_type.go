@@ -21,15 +21,17 @@ const (
 	DOT      // .
 	QUESTION // ?
 	NOT
-	QUESTIONDOT // ?.
-	ARROW       // =>
-	ELLIPSIS    // ...
-	BACKQUOTE   // `
-	GREATER     // >
-	LESS        // <
-	EQ          // =
-	EQUALITY    // ==
-	EQ3
+	QUESTIONDOT    // ?.
+	ARROW          // =>
+	ELLIPSIS       // ...
+	BACKQUOTE      // `
+	GREATER        // >
+	LESS           // <
+	EQ             // =
+	EQUALITY       // ==
+	EQ3            // ===
+	NOT_EQ         // !=
+	NOT_EQ3        // !==
 	ASSIGN         // _=
 	BITWISEOR      // |
 	BITWISEXOR     // ^
@@ -114,6 +116,8 @@ var tokenTypeLiteral map[TokenType]string = map[TokenType]string{
 	EQ:             "=",
 	EQUALITY:       "==",
 	EQ3:            "===",
+	NOT_EQ:         "!=",
+	NOT_EQ3:        "!==",
 	ASSIGN:         "_=",
 	BITWISEOR:      "|",
 	BITWISEXOR:     "^",
