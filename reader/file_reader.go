@@ -72,6 +72,7 @@ func (fr *FileReader) NextRune() rune {
 	}
 }
 
+// FIXME: 当回退步数超过line的长度时，line应该重置为上一行内容
 func (fr *FileReader) Backtrack() {
 	fr.tr.Backtrack()
 }

@@ -1623,24 +1623,24 @@ func Test_re_eq3(t *testing.T) {
 	}
 }
 
-// func Test_re_division(t *testing.T) {
-// 	notDFA := newDFA(re_division)
+func Test_re_division(t *testing.T) {
+	notDFA := newDFA(re_division)
 
-// 	testCases := []struct {
-// 		input  string
-// 		output bool
-// 	}{
-// 		{"/", true},
-// 		{"//", false},
-// 		{"///", false},
-// 		{" /", true},
-// 		{" / ", true},
-// 	}
+	testCases := []struct {
+		input  string
+		output bool
+	}{
+		{"/", true},
+		{"//", false},
+		{"///", false},
+		{" /", true},
+		{" / ", true},
+	}
 
-// 	for _, tobj := range testCases {
-// 		result := notDFA.Match(tobj.input)
-// 		if result != tobj.output {
-// 			t.Errorf("Test_re_division got error in %s, expected to be %v, but got %v", tobj.input, tobj.output, result)
-// 		}
-// 	}
-// }
+	for _, tobj := range testCases {
+		result := notDFA.Match(tobj.input)
+		if result != tobj.output {
+			t.Errorf("Test_re_division got error in %s, expected to be %v, but got %v", tobj.input, tobj.output, result)
+		}
+	}
+}

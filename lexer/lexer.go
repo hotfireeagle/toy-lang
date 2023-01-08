@@ -34,28 +34,31 @@ func (l *Lexer) NextToken() *tokentype.Token {
 		ru := l.reader.NextRune()
 		nextRu, _ := l.reader.PeekNextNRune(1)
 
-		if len(sb.String()) == 0 && ru == '/' && nextRu != '/' && nextRu != '*' {
-			sb.WriteRune(ru)
-			count := 1
-			ru = l.reader.NextRune()
-			for ru != '/' {
-				if ru == constant.Enter || ru == constant.Tab || ru == constant.Whitespace {
-					break
-				}
-				sb.WriteRune(ru)
-				ru = l.reader.NextRune()
-				count += 1
-			}
+		// TODO: support for regexp
+		// if len(sb.String()) == 0 && ru == '/' && nextRu != '/' && nextRu != '*' {
+		// 	sb.WriteRune(ru)
+		// 	count := 1
+		// 	ru = l.reader.NextRune()
+		// 	for ru != '/' {
+		// 		if ru == constant.Enter || ru == constant.Tab || ru == constant.Whitespace || ru == constant.EOF {
+		// 			break
+		// 		}
+		// 		sb.WriteRune(ru)
+		// 		ru = l.reader.NextRune()
+		// 		count += 1
+		// 	}
 
-			if ru == '/' {
-				sb.WriteRune(ru)
-				return tokentype.New(tokentype.REGEXP, sb.String())
-			} else {
-				for j := 1; j <= count; j++ {
-					l.reader.Backtrack()
-				}
-			}
-		}
+		// 	if ru == '/' {
+		// 		sb.WriteRune(ru)
+		// 		return tokentype.New(tokentype.REGEXP, sb.String())
+		// 	} else {
+		// 		for j := 1; j <= count; j++ {
+		// 			l.reader.Backtrack()
+		// 		}
+		// 		shit := l.reader.NextRune()
+		// 		fmt.Println("out", ru, shit, count)
+		// 	}
+		// }
 
 		if ru == '/' && nextRu == '/' {
 			for ru != constant.Enter {
